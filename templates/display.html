@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %}{% endblock %}</h1>
+    <h3>The contents of {{ filename }}</h3>
+    {{ data_var|safe }}
+{% endblock %}
