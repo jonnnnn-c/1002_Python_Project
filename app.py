@@ -18,6 +18,7 @@ NOTES:
 """
 
 from flask import *
+import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 import time
@@ -58,6 +59,32 @@ def upload():
         file_size = humanize.naturalsize(os.path.getsize(file_path))
         files[filename] = file_size
     return render_template('upload_files.html', files=files)
+
+
+@app.route('/display_file/<filename>', methods=['GET'])
+def display(filename):
+    # if file size too big, may take a long time or crash
+    try:
+        file_path = os.path.join(app.root_path, 'datasets', filename)
+        file_name, file_extension = os.path.splitext(filename)
+
+        if file_extension == '.csv':
+            df = pd.read_csv(file_path)
+            df_html = df.to_html()
+        elif file_extension == '.xlsx':
+            df = pd.read_excel(file_path)
+            df_html = df.to_html()
+        elif file_extension == '.json':
+            df = pd.read_json(file_path)
+            df_html = df.to_html()
+        elif file_extension == '.txt':
+            df = pd.read_csv(file_path)
+            df_html = df.to_html()
+        else:
+            df_html = "<h5>File extension not supported</h5>"
+    except ValueError:
+        df_html = "<h5>Error in displaying File contents</h5>"
+    return render_template('display.html', data_var=df_html, filename=filename)
 
 
 if __name__ == '__main__':
