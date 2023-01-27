@@ -68,9 +68,16 @@ def upload():
     for filename in os.listdir('datasets'):
         file_path = os.path.join(app.root_path, 'datasets', filename)
         file_size = humanize.naturalsize(os.path.getsize(file_path))
-        files[filename] = file_size
+        file_c_time = os.path.getctime(file_path)
+        files[filename] = [file_size, time.ctime(file_c_time)]
     return render_template('upload_files.html', files=files)
 
+
+@app.route('/delete_file/<filename>', methods=['GET'])
+def delete_file(filename):
+    if request.method == "GET":
+        os.remove(os.path.join(app.root_path, 'datasets', filename))
+    return url_for("upload_files")
 
 @app.route('/display_file/<filename>', methods=['GET'])
 def display(filename):

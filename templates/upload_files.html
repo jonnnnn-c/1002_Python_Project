@@ -5,6 +5,11 @@
         section {
             padding-top: 2%;
         }
+
+        ul {
+            list-style-type: none;
+            padding: 0px;
+        }
     </style>
 
     <h1>{% block title %} Crime Rates Plotter {% endblock %}</h1>
@@ -34,9 +39,13 @@
     <section>
         <h3>Uploaded datasets</h3>
         <br>
-        {% for filename, filesize in files.items() %}
+        {% for filename, file_information in files.items() %}
         <ul>
-            <li><a href="/display_file/{{ filename }}">{{ filename }}</a> ({{ filesize }})</li>
+            <li>
+                <a href="{{ url_for('delete_file', filename=filename) }}" style="border: none; height: auto; margin-right: 15px;" class="btn btn-danger" onclick="return confirm('Confirm Deletion')"><i class="fa fa-trash fa-2x"></i>Delete</a>
+                <a href="/display_file/{{ filename }}">{{ filename }}</a>
+                ({{ file_information[0] }}) - {{ file_information[1] }}
+            </li>
         </ul>
         {% endfor %}
     </section>
