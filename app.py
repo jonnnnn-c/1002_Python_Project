@@ -16,13 +16,15 @@ NOTES:
 • path to datasets: os.path.join(app.root_path, 'datasets', filename)
 
 """
-
 from flask import *
 import pandas as pd
 from werkzeug.utils import secure_filename
 import os
 import time
 import humanize
+import plotly
+import plotly.express as px
+import json
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -30,7 +32,16 @@ app.secret_key = "super secret key"
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Graph
+
+    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
+    fig = px.bar(df, y='pop', x='country', text_auto='.2s',
+                 title="Controlled text sizes, positions and angles")
+    fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('index.html', graphJSON=graphJSON)
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])
