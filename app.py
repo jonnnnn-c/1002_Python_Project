@@ -68,18 +68,20 @@ def display(filename):
         file_path = os.path.join(app.root_path, 'datasets', filename)
         file_name, file_extension = os.path.splitext(filename)
 
+        pd.set_option('colheader_justify', 'center')
+
         if file_extension == '.csv':
             df = pd.read_csv(file_path)
-            df_html = df.to_html()
+            df_html = df.to_html(classes='mystyle')
         elif file_extension == '.xlsx':
             df = pd.read_excel(file_path)
-            df_html = df.to_html()
+            df_html = df.to_html(classes='mystyle')
         elif file_extension == '.json':
             df = pd.read_json(file_path)
-            df_html = df.to_html()
+            df_html = df.to_html(classes='mystyle')
         elif file_extension == '.txt':
             df = pd.read_csv(file_path)
-            df_html = df.to_html()
+            df_html = df.to_html(classes='mystyle')
         else:
             df_html = "<h5>File extension not supported</h5>"
     except ValueError:
