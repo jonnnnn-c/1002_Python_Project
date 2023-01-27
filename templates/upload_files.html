@@ -1,60 +1,47 @@
-<html lang="en">
-    <head>
-        <link rel="stylesheet"
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-              crossorigin="anonymous">
+{% extends 'base.html' %}
 
-        <meta charset="UTF-8">
-        <title>Crime Rate Graphs</title>
+{% block content %}
+    <style>
+        section {
+            padding-top: 2%;
+            padding-left: 1%
+        }
+    </style>
 
-        <style>
-            section {
-                padding-top: 2%;
-                padding-left: 1%
-            }
-        </style>
-    </head>
+    <h1>{% block title %} Crime Rates Plotter {% endblock %}</h1>
 
-    <body>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Crime Rates Plotter</a>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="upload_files">Upload datasets</a></li>
-            </ul>
-        </nav>
-
-        <section>
-            <h3>Upload</h3>
-            <br>
-            <form action = "/upload_files" method="POST" enctype="multipart/form-data">
-                <input type="file" name="file" multiple />
-                <input type = "submit" value="Upload">
-            </form>
+    <section>
+        <h3>Upload</h3>
+        <br>
+        <form action = "/upload_files" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" multiple />
+            <input type = "submit" value="Upload">
+        </form>
 
 
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                    <div style="margin-top: 40px;">
-                        <div class="alert alert-success" role="alert">
-                            {{message}}
-                        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div style="margin-top: 40px;">
+                    <div class="alert alert-success" role="alert">
+                        {{message}}
                     </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </section>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </section>
 
-        <section>
-            <h3>Uploaded datasets</h3>
-            <br>
-            {% for key, value in files.items() %}
-            <ul>
-                <li>{{ key }} ({{ value }})</li>
-            </ul>
-            {% endfor %}
-        </section>
+    <section>
+        <h3>Uploaded datasets</h3>
+        <br>
+        {% for key, value in files.items() %}
+        <ul>
+            <li>{{ key }} ({{ value }})</li>
+        </ul>
+        {% endfor %}
+    </section>
 
-    </body>
-</html>
+
+
+{% endblock %}
