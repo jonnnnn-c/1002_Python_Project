@@ -26,7 +26,6 @@ import plotly
 import plotly.express as px
 import json
 
-# THIS IS AYB
 app = Flask(__name__)
 app.secret_key = "super secret key"
 
@@ -74,11 +73,12 @@ def upload():
     return render_template('upload_files.html', files=files)
 
 
-@app.route('/delete_file/<filename>', methods=['GET'])
+@app.route('/delete_file/<filename>', methods=['GET', 'POST'])
 def delete_file(filename):
-    if request.method == "GET":
-        os.remove(os.path.join(app.root_path, 'datasets', filename))
-    return url_for("upload_files")
+    # TODO: NOT WORKING REMEMBER DO
+    os.remove(os.path.join(app.root_path, 'datasets', filename))
+    return redirect(url_for("upload_files"))
+
 
 @app.route('/display_file/<filename>', methods=['GET'])
 def display(filename):
