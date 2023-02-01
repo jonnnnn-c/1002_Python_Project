@@ -3,7 +3,40 @@
 {% block content %}
     <h1>{% block title %} Welcome to Crime Rate Graphs{% endblock %}</h1>
 
-    <div id="test"></div>
+    <div id="test">
+        <form action="/filter_country.php">
+            <label for="Country">Country:</label>
+            <select name="Country" id="Country">
+                <option value="China">China</option>
+                <option value="USA">USA</option>
+                <option value="Singapore">Singapore</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+        <form action="/filter_year.php">
+            <fieldset>
+             <legend>Year Filter:</legend>
+             <label for="start_year">Year:</label>
+             <input type="text" id="start_year" name="start_year">
+             <label for="end_year">to</label>
+             <input type="text" id="end_year" name="end_year">
+             <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+
+        <form action="/filter_factor.php">
+            <fieldset>
+                <input type="checkbox" id="factor1" name="factor1" value="factor1">
+                <label for="factor1"> factor1</label><br>
+                <input type="checkbox" id="factor2" name="factor2" value="factor2">
+                <label for="factor2"> factor2</label><br>
+                <input type="checkbox" id="factor3" name="factor3" value="factor3">
+                <label for="factor3"> factor3</label><br>
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+    </div>
 
     <div id='chart' class='chart'></div>
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
