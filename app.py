@@ -55,7 +55,7 @@ def upload():
         # Iterate for each file in the files List, and Save them
         for file in files:
             filename = secure_filename(file.filename)
-            file_path = os.path.join(app.root_path, 'datasets', filename)
+            file_path = os.path.join(app.root_path, 'datasets_user', filename)
             file.save(file_path)
 
         while not os.path.exists(file_path):
@@ -65,8 +65,8 @@ def upload():
 
     # Display all current files into page
     files = dict()
-    for filename in os.listdir('datasets'):
-        file_path = os.path.join(app.root_path, 'datasets', filename)
+    for filename in os.listdir('datasets_user'):
+        file_path = os.path.join(app.root_path, 'datasets_user', filename)
         file_size = humanize.naturalsize(os.path.getsize(file_path))
         file_c_time = os.path.getctime(file_path)
         files[filename] = [file_size, time.ctime(file_c_time)]
@@ -76,7 +76,7 @@ def upload():
 @app.route('/delete_file/<filename>', methods=['GET', 'POST'])
 def delete_file(filename):
     # TODO: NOT WORKING REMEMBER DO
-    os.remove(os.path.join(app.root_path, 'datasets', filename))
+    os.remove(os.path.join(app.root_path, 'datasets_user', filename))
     return redirect(url_for("upload_files"))
 
 
@@ -84,7 +84,7 @@ def delete_file(filename):
 def display(filename):
     # if file size too big, may take a long time or crash
     try:
-        file_path = os.path.join(app.root_path, 'datasets', filename)
+        file_path = os.path.join(app.root_path, 'datasets_user', filename)
         file_name, file_extension = os.path.splitext(filename)
 
         pd.set_option('colheader_justify', 'center')
