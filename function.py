@@ -112,6 +112,7 @@ def cleanJsondata(filename,Country, startyear,endyear):
 
     return newdf
 
+
 def cleanEnroldata(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country
@@ -119,6 +120,7 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     yearlist = []
     rownum = 0
     check = False
+    print(Country)
     
     datasetstartyear,datasetendyear = 0,0
 
@@ -160,19 +162,19 @@ def cleanPovertydata(filename, Country, startyear, endyear):
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
-            datasetstartyear = df["survey_year"][i]
+            datasetstartyear = int(df["survey_year"][i] // 1)
             rownum = i
             check = True
         if countrylist[i] != Country and check == True:
-            datasetendyear = df["survey_year"][i-1]
+            datasetendyear = int(df["survey_year"][i-1] // 1)
             endrow = i
             break
     
     startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
-
+    print(startyear)
     for year in range(startyear,endyear+1):
         for row in range(endrow-rownum):
-            if df["survey_year"][rownum+row] == year:
+            if int(df["survey_year"][rownum+row]//1) == year:
                 
                 newdata.append(float(df["gini"][rownum+row]))
                 yearlist.append(int(year))
@@ -265,7 +267,7 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
 
 def convertname(Country):
     convert_dict = {
-        "United States": "USA",
+        "USA": "USA",
         "Singapore": "SG",
         "Japan":"JP",
         "Brazil":"BZ",
@@ -278,8 +280,8 @@ def convertname(Country):
     }
     return convert_dict[Country]
 
-# file1 = "data/CrimeRates/"+country.replace(" ","-").lower()+"-crime-rate-statistics.csv"
-# file2 = "data/CosumerPriceIndex/CPI_"+convertname(country)+".xlsx"
+#file1 = "data/CrimeRates/"+country.replace(" ","-").lower()+"-crime-rate-statistics.csv"
+#file2 = "data/CosumerPriceIndex/CPI_"+convertname(country)+".xlsx"
 file3 = "data/IncomePolarization/IncomeInequality_World.xls"
 file4 = "data/GeneralFileType/test.json"
 file5 = "data/enrollment.csv"
@@ -287,17 +289,6 @@ file6 = "data/poverty-explorer.csv"
 file7 = "data/family.csv"
 file8 = "datasets_user/test.csv"
 file9 = "datasets_user/test.txt"
-
-# Country = 'United States'
-# Country = 'France'
-Country = 'Japan'
-start_year = 1990
-end_year = 2020
-# clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", Country, start_year, end_year)
-# print(clean_data)
-
-clean_data = cleanEnroldata(file5, Country, start_year, end_year)
-print(clean_data)
 
 #print(cleanCrimedata(file1," Brazil",1985,3000))
 #print(cleanCPIdata(file2,1980,2010))
