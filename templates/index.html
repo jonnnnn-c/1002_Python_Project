@@ -4,12 +4,15 @@
     <h1>{% block title %} Welcome to Crime Rate Graphs{% endblock %}</h1>
 
     <style>
-
+        fieldset{
+            display: inline;
+            border: 5px solid black;
+        }
     </style>
 
     <div id="filter_form">
         <form action="/filter">
-            <fieldset>
+            <fieldset id="Country_filter">
                 <legend>Country Filter:</legend>
                 <label for="Country">Country:</label>
                 <select name="Country" id="Country">
@@ -26,7 +29,7 @@
                 </select>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="Year_filter">
                 <legend>Year Filter:</legend>
                 <label for="start_year">Year:</label>
                 <input type="text" id="start_year" name="start_year" value="1990">
@@ -34,7 +37,7 @@
                 <input type="text" id="end_year" name="end_year" value="2020">
             </fieldset>
             
-            <fieldset>
+            <fieldset id="Factor_filter">
                 <legend>Factor Filter:</legend>
                 <input type="checkbox" id="Educational_opportunities" name="Educational_opportunities" value="T" checked>
                 <label for="Educational_opportunities">Lack of Educational opportunities</label><br>
