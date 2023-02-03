@@ -134,7 +134,24 @@ def index():
 
             graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
             graphJSON.append(graph1JSON)
+            
+        # Crime Rate Graph            
+        #clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
+        #print(clean_data)
 
+        #columns = [col for col in clean_data.columns]
+        #column_1_values = [col for col in clean_data[columns[0]]]
+        #column_2_values = [col for col in clean_data[columns[1]]]
+
+        #df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        #fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
+        #    xaxis_title=columns[0],
+        #    yaxis_title=columns[1])
+
+        #graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        #graphJSON.append(graph1JSON)
+        
         # if Consumer_Price_Index == 'T':
         #     clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_"+convertname(Country)+".xlsx", start_year, end_year)
         #     print(clean_data)
