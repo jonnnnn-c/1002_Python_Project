@@ -25,6 +25,7 @@ import humanize
 import plotly
 import plotly.express as px
 import json
+import plotly.graph_objects as go
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -42,6 +43,22 @@ def index():
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template('index.html', graphJSON=graphJSON)
+
+@app.route('/filter', methods=['GET'])
+def filter():
+    Country = request.args.get('Country')
+    start_year = request.args.get('start_year')
+    end_year = request.args.get('end_year')
+    
+    # Factors
+    Educational_opportunities = request.args.get('Educational_opportunities')
+    Poverty = request.args.get('Poverty')
+    Inequality = request.args.get('Inequality')
+    Dysfunctional_family = request.args.get('Dysfunctional_family')
+    CPI = request.args.get('CPI')
+    Income_Polarization = request.args.get('Income_Polarization')
+
+    return render_template('index.html')
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])
