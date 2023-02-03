@@ -1,4 +1,5 @@
 Flask==2.2.2
 humanize==4.4.0
 pandas==1.5.3
+plotly==5.13.0
 Werkzeug==2.2.2

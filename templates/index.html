@@ -33,24 +33,27 @@
                 <legend>Year Filter:</legend>
                 <label for="start_year">Year:</label>
                 <input type="text" id="start_year" name="start_year" value="1990">
+
                 <label for="end_year">to</label>
                 <input type="text" id="end_year" name="end_year" value="2020">
             </fieldset>
-            
+
             <fieldset id="Factor_filter">
                 <legend>Factor Filter:</legend>
-                <input type="checkbox" id="Educational_opportunities" name="Educational_opportunities" value="T" checked>
-                <label for="Educational_opportunities">Lack of Educational opportunities</label><br>
-                <input type="checkbox" id="Poverty" name="Poverty" value="T" checked>
-                <label for="Poverty">Poverty</label><br>
-                <input type="checkbox" id="Inequality" name="Inequality" value="T" checked>
-                <label for="Inequality">Inequality</label><br>
-                <input type="checkbox" id="Dysfunctional_family" name="Dysfunctional_family" value="T" checked>
-                <label for="Dysfunctional_family">Dysfunctional family</label><br>
-                <input type="checkbox" id="CPI" name="CPI" value="T" checked>
-                <label for="CPI">Consumer Price Index</label><br>
-                <input type="checkbox" id="Income_Polarization" name="Income_Polarization" value="T" checked>
+                <input type="checkbox" id="Consumer_Price_Index" name="Consumer_Price_Index" value="T">
+                <label for="Consumer_Price_Index">Consumer Price Index</label><br>
+
+                <input type="checkbox" id="Income_Polarization" name="Income_Polarization" value="T">
                 <label for="Income_Polarization">Income Polarization</label><br>
+
+                <input type="checkbox" id="Enrolment" name="Enrolment" value="T">
+                <label for="Enrolment">Enrolment</label><br>
+
+                <input type="checkbox" id="Family" name="Family" value="T">
+                <label for="Family">Family</label><br>
+
+                <input type="checkbox" id="Poverty" name="Poverty" value="T">
+                <label for="Poverty">Poverty</label><br>
             </fieldset>
 
             <input type="submit" value="Submit">
@@ -59,11 +62,13 @@
 
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
-    {% for graphs in range(graphJSON|length) %}
-        <div id='{{ graphs }}' class='chart'></div>
-        <script type='text/javascript'>
-            var graph = {{ graphJSON[graphs] | safe}};
-            Plotly.plot('{{ graphs }}', graph, {});
-        </script>
-    {% endfor %}
+    {% if filter == True %}
+        {% for graphs in range(graphJSON|length) %}
+            <div id='{{ graphs }}' class='chart'></div>
+            <script type='text/javascript'>
+                var graph = {{ graphJSON[graphs] | safe}};
+                Plotly.plot('{{ graphs }}', graph, {});
+            </script>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

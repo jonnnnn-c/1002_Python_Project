@@ -16,16 +16,16 @@ NOTES:
 • path to datasets: os.path.join(app.root_path, 'datasets', filename)
 
 """
-from flask import *
-import pandas as pd
-from werkzeug.utils import secure_filename
-import os
+import json
 import time
+
 import humanize
 import plotly
 import plotly.express as px
-import json
-import plotly.graph_objects as go
+from flask import *
+from werkzeug.utils import secure_filename
+
+from function import *
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -48,7 +48,7 @@ def index():
     start_year = request.args.get('start_year')
     end_year = request.args.get('end_year')
 
-    if start_year != None and end_year != None:
+    if start_year is not None and end_year is not None:
         try:
             if int(start_year) < 1990:
                 start_year = 1990
@@ -67,39 +67,110 @@ def index():
         end_year = 2020
 
     # Factors
-    Educational_opportunities = request.args.get('Educational_opportunities')
-    Poverty = request.args.get('Poverty')
-    Inequality = request.args.get('Inequality')
-    Dysfunctional_family = request.args.get('Dysfunctional_family')
-    CPI = request.args.get('CPI')
+    Consumer_Price_Index = request.args.get('Consumer_Price_Index')
     Income_Polarization = request.args.get('Income_Polarization')
+    Enrolment = request.args.get('Enrolment')
+    Family = request.args.get('Family')
+    Poverty = request.args.get('Poverty')
 
-    # Graph
-    # x = year, y = factor, output = country
-    df = pd.DataFrame(dict(
-        Year=[1990, 1993, 1995, 2001, 2003, 2005, 2008, 2010, 2011, 2014, 2016, 2019, 2020],
-        Lack_of_Educational_Opportunities=[1, 2, 3, 4, 6, 9, 12, 15, 16, 19, 23, 30, 40]
-    ))
-
+    # GRAPH
     # Rename dataframe keys so that x and y-axis names are more general
-    df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
+    # df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
+    # x = year, y = factor, output = country
 
-    fig1 = px.line(df, x="year", y="countries", title="Lack of Educational Opportunities")
-    graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+    is_filter = True
+    graphJSON = []
 
+    if Consumer_Price_Index == 'T':
+        clean_data = cleanCPIdata(file2, 1980, 2010)
+        print(clean_data)
 
-    # Example graph
-    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
-    fig2 = px.bar(df, y='pop', x='country', text_auto='.2s',
-                  title="Controlled text sizes, positions and angles")
-    fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
 
-    graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-    graphJSON = [graph1JSON, graph2JSON]
-    return render_template('index.html', graphJSON=graphJSON)
+        fig1 = px.line(df, x='x', y='y', title="Consumer Price Index").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
 
-    # return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON)
+
+    if Income_Polarization == 'T':
+        clean_data = cleanIncomedata(file3, "Brazil", 2000, 2010)
+        print(clean_data)
+
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
+
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        fig1 = px.line(df, x='x', y='y', title="Income Polarization").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON)
+
+    if Enrolment == 'T':
+        clean_data = cleanEnroldata(file5, "Brazil", 1999, 3005)
+        print(clean_data)
+
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
+
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        fig1 = px.line(df, x='x', y='y', title="Enrolment").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON)
+
+    if Family == 'T':
+        clean_data = cleanFamilyData(file7, "Brazil", 1000, 2012)
+        print(clean_data)
+
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
+
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        fig1 = px.line(df, x='x', y='y', title="Family").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON)
+
+    if Poverty == 'T':
+        clean_data = cleanPovertydata(file6, "Brazil", 2000, 2005)
+        print(clean_data)
+
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
+
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        fig1 = px.line(df, x='x', y='y', title="Poverty").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON)
+
+    else:
+        is_filter = False
+
+    # List of graphs
+    return render_template('index.html', graphJSON=graphJSON, filter=is_filter)
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])
