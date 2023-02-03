@@ -40,11 +40,11 @@ def index():
     # country
     Country = request.args.get('Country')
 
-    countries = ['USA', 'Singapore', 'Japan', 'Brazil', 'Jamaica', 'France', 'Philippines', 'India', 'South Afrcia',
+    countries = ['United States', 'Singapore', 'Japan', 'Brazil', 'Jamaica', 'France', 'Philippines', 'India', 'South Africa',
                  'Mexico']
 
     if not (Country in countries):
-        Country = 'USA'
+        Country = 'United States'
 
     # start and end year
     start_year = request.args.get('start_year')
@@ -121,6 +121,7 @@ def index():
 
         if Enrolment == 'T':
             clean_data = cleanEnroldata(file5, Country, start_year, end_year)
+            print(Country, start_year, end_year)
             print(clean_data)
 
             columns = [col for col in clean_data.columns]
