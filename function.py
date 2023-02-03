@@ -23,7 +23,8 @@ def cleanCrimedata(filename,startyear,endyear):
             if int(df["date"][startrow+row][:4]) == year:
                 newdata.append(float(df[" Per 100K Population"][startrow+row]))
                 yearlist.append(int(year))
-        
+            if int(df["date"][startrow+row][:4]) >= year:
+                break
         
     dict1 = {"Year":yearlist, 'Crime Rates Per 100k Population':newdata}
     newdf = pd.DataFrame (dict1)
