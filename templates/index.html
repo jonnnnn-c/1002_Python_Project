@@ -57,16 +57,13 @@
         </form>
     </div>
 
-    <div id='chart1' class='chart'></div>
-    <div id='chart2' class='chart'></div>
-
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
-    <script type='text/javascript'>
-        var graph1 = {{graph1JSON | safe}};
-        Plotly.plot('chart1', graph1, {});
-
-        var graph2 = {{graph2JSON | safe}};
-        Plotly.plot('chart2', graph2, {});
-    </script>
+    {% for graphs in range(graphJSON|length) %}
+        <div id='{{ graphs }}' class='chart'></div>
+        <script type='text/javascript'>
+            var graph = {{ graphJSON[graphs] | safe}};
+            Plotly.plot('{{ graphs }}', graph, {});
+        </script>
+    {% endfor %}
 {% endblock %}

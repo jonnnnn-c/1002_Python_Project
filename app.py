@@ -96,7 +96,10 @@ def index():
 
     graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
+    graphJSON = [graph1JSON, graph2JSON]
+    return render_template('index.html', graphJSON=graphJSON)
+
+    # return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])
