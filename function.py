@@ -266,15 +266,15 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
    
     
 
-file1 = "Data/CrimeRates/brazil-crime-rate-statistics.csv"
-file2 = "Data/ConcumerPriceIndex/CPI_IN.xlsx"
-file3 = "Data/IncomePolarization/IncomeInequality_World.xls"
-file4 = "Data/GeneralFileType/test.json"
-file5 = "Data/enrollment.csv"
-file6 = "Data/poverty-explorer.csv"
-file7 = "Data/family.csv"
-file8 = "Data/GeneralFileType/test.csv"
-file9 = "Data/GeneralFileType/test.txt"
+file1 = "data/CrimeRates/brazil-crime-rate-statistics.csv"
+file2 = "data/ConcumerPriceIndex/CPI_IN.xlsx"
+file3 = "data/IncomePolarization/IncomeInequality_World.xls"
+file4 = "data/GeneralFileType/test.json"
+file5 = "data/enrollment.csv"
+file6 = "data/poverty-explorer.csv"
+file7 = "data/family.csv"
+file8 = "data/GeneralFileType/test.csv"
+file9 = "data/GeneralFileType/test.txt"
 
 #print(cleanCrimedata(file1," Brazil",1985,3000))
 #print(cleanCPIdata(file2,1980,2010))
