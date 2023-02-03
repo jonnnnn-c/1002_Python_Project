@@ -46,10 +46,24 @@ def index():
 
 @app.route('/filter', methods=['GET'])
 def filter():
+    # country
     Country = request.args.get('Country')
+
+    countries = ['USA', 'Singapore', 'Japan', 'Brazil', 'Jamaica', 'France', 'Philippines', 'India', 'South Afrcia', 'Mexico']
+
+    if not(Country in countries):
+        Country = 'USA'
+
+    # start and end year
     start_year = request.args.get('start_year')
     end_year = request.args.get('end_year')
-    
+
+    if int(start_year) < 1990:
+        start_year = 1990
+
+    if int(end_year) > 2020:
+        end_year = 2020
+
     # Factors
     Educational_opportunities = request.args.get('Educational_opportunities')
     Poverty = request.args.get('Poverty')
@@ -57,6 +71,8 @@ def filter():
     Dysfunctional_family = request.args.get('Dysfunctional_family')
     CPI = request.args.get('CPI')
     Income_Polarization = request.args.get('Income_Polarization')
+
+    
 
     return render_template('index.html')
 
@@ -120,8 +136,11 @@ def display(filename):
             df_html = df.to_html(classes='mystyle')
         else:
             df_html = "<h5>File extension not supported</h5>"
-    except ValueError:
+    except Exception as e: 
+        print(e)
         df_html = "<h5>Error in displaying File contents</h5>"
+    # except ValueError:
+    #     df_html = "<h5>Error in displaying File contents</h5>"
     return render_template('display.html', data_var=df_html, filename=filename)
 
 
