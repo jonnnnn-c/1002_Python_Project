@@ -40,20 +40,10 @@
 
             <fieldset id="Factor_filter">
                 <legend>Factor Filter:</legend>
-                <input type="checkbox" id="Consumer_Price_Index" name="Consumer_Price_Index" value="T">
-                <label for="Consumer_Price_Index">Consumer Price Index</label><br>
-
-                <input type="checkbox" id="Income_Polarization" name="Income_Polarization" value="T">
-                <label for="Income_Polarization">Income Polarization</label><br>
-
-                <input type="checkbox" id="Enrolment" name="Enrolment" value="T">
-                <label for="Enrolment">Enrolment</label><br>
-
-                <input type="checkbox" id="Family" name="Family" value="T">
-                <label for="Family">Family</label><br>
-
-                <input type="checkbox" id="Poverty" name="Poverty" value="T">
-                <label for="Poverty">Poverty</label><br>
+                {% for factor in factors %}
+                    <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T">
+                    <label for="{{ factor }}">{{ factor }}</label><br>
+                {% endfor %}
             </fieldset>
 
             <input type="submit" value="Submit">
