@@ -3,24 +3,35 @@
 {% block content %}
     <h1>{% block title %} Welcome to Crime Rate Graphs{% endblock %}</h1>
 
+    <style>
+
+    </style>
+
     <div id="filter_form">
         <form action="/filter">
             <fieldset>
                 <legend>Country Filter:</legend>
                 <label for="Country">Country:</label>
                 <select name="Country" id="Country">
-                    <option value="China">China</option>
                     <option value="USA">USA</option>
                     <option value="Singapore">Singapore</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Jamaica">Jamaica</option>
+                    <option value="France">France</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="India">India</option>
+                    <option value="South Afrcia">South Afrcia</option>
+                    <option value="Mexico">Mexico</option>
                 </select>
             </fieldset>
 
             <fieldset>
                 <legend>Year Filter:</legend>
                 <label for="start_year">Year:</label>
-                <input type="text" id="start_year" name="start_year">
+                <input type="text" id="start_year" name="start_year" value="1990">
                 <label for="end_year">to</label>
-                <input type="text" id="end_year" name="end_year">
+                <input type="text" id="end_year" name="end_year" value="2020">
             </fieldset>
             
             <fieldset>
