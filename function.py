@@ -267,7 +267,7 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
 
 def convertname(Country):
     convert_dict = {
-        "USA": "USA",
+        "United States": "USA",
         "Singapore": "SG",
         "Japan":"JP",
         "Brazil":"BZ",
