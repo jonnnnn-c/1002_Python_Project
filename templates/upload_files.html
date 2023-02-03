@@ -12,15 +12,10 @@
         }
     </style>
 
-    <h1>{% block title %} Crime Rates Plotter {% endblock %}</h1>
-
     <section>
         <h3>Upload</h3>
         <br>
         <form action = "/upload_files" method="POST" enctype="multipart/form-data">
-            <label for="newfactor">Factor to add</label>
-            <input type="text" id="newfactor" name="newfactor" required>
-            <br><br>
             <input type="file" name="file" multiple />
             <input type = "submit" value="Upload">
         </form>

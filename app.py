@@ -155,7 +155,7 @@ def index():
         # graphJSON.append(graph1JSON) 
 
     # List of graphs
-    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors)
+    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors, country=Country)
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])

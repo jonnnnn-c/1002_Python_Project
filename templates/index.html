@@ -1,64 +1,78 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to Crime Rate Graphs{% endblock %}</h1>
-
-    <style>
-        fieldset{
-            display: inline;
-            border: 5px solid black;
-        }
-    </style>
-
     <div id="filter_form">
         <form action="/">
-            <fieldset id="Country_filter">
-                <legend>Country Filter:</legend>
-                <label for="Country">Country:</label>
-                <select name="Country" id="Country">
-                    <option value="United States">USA</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Jamaica">Jamaica</option>
-                    <option value="France">France</option>
-                    <option value="Philippines">Philippines</option>
-                    <option value="India">India</option>
-                    <option value="South Africa">South Africa</option>
-                    <option value="Mexico">Mexico</option>
-                </select>
-            </fieldset>
 
-            <fieldset id="Year_filter">
-                <legend>Year Filter:</legend>
-                <label for="start_year">Year:</label>
-                <input type="text" id="start_year" name="start_year" value="1990">
+            <div class="container">
+                <div class="row form-group">
+                    <div class="col-sm" id="Factor_filter" style="padding-right: 0px">
+                        <h4>Factor Filter:</h4><br>
 
-                <label for="end_year">to</label>
-                <input type="text" id="end_year" name="end_year" value="2020">
-            </fieldset>
+                        <input type="checkbox" id="Consumer_Price_Index" name="Consumer_Price_Index" value="T">
+                        <label for="Consumer_Price_Index" style="padding-left: 10px;">Consumer Price Index</label><br>
 
-            <fieldset id="Factor_filter">
-                <legend>Factor Filter:</legend>
-                {% for factor in factors %}
-                    <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T">
-                    <label for="{{ factor }}">{{ factor }}</label><br>
-                {% endfor %}
-            </fieldset>
+                        <input type="checkbox" id="Income_Polarization" name="Income_Polarization" value="T">
+                        <label for="Income_Polarization" style="padding-left: 10px;">Income Polarization</label><br>
 
-            <input type="submit" value="Submit">
+                        <input type="checkbox" id="Enrolment" name="Enrolment" value="T">
+                        <label for="Enrolment" style="padding-left: 10px;">Enrolment</label><br>
+
+                        <input type="checkbox" id="Family" name="Family" value="T">
+                        <label for="Family" style="padding-left: 10px;">Family</label><br>
+
+                        <input type="checkbox" id="Poverty" name="Poverty" value="T">
+                        <label for="Poverty" style="padding-left: 10px;">Poverty</label><br>
+                    </div>
+
+                    <div class="col-md" id="Year_filter" style="padding-left: 0px">
+                        <h4>Year:</h4>
+
+                        <label for="start_year">From:</label>
+                        <input type="text" id="start_year" class="form-control"
+                               name="start_year" value="1990">
+
+                        <br/>
+                        <label for="end_year">to:</label>
+                        <input type="text" id="end_year" class="form-control"
+                               name="end_year" value="2020">
+                    </div>
+
+                    <div class="col-md" id="Country_filter" style="padding-left: 50px">
+                        <h4 style="padding-bottom: 8px;">Country:</h4><br>
+
+                        <select name="Country" id="Country" class="form-control">
+                            <option value="United States">USA</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Brazil">Brazil</option>
+                            <option value="Jamaica">Jamaica</option>
+                            <option value="France">France</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="India">India</option>
+                            <option value="South Africa">South Africa</option>
+                            <option value="Mexico">Mexico</option>
+                        </select>
+                    </div>
+                </div>
+
+                <br><br>
+                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Submit">
+
+                <!-- Plotly -->
+                <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+                {% if filter == True %}
+                    <h1 style="padding-top: 2em; text-align: center;">{{ country }}</h1>
+                    {% for graphs in range(graphJSON|length) %}
+                        <div id='{{ graphs }}' class='chart'></div>
+                        <script type='text/javascript'>
+                            var graph = {{ graphJSON[graphs] | safe}};
+                            Plotly.plot('{{ graphs }}', graph, {});
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </form>
     </div>
-
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-
-    {% if filter == True %}
-        {% for graphs in range(graphJSON|length) %}
-            <div id='{{ graphs }}' class='chart'></div>
-            <script type='text/javascript'>
-                var graph = {{ graphJSON[graphs] | safe}};
-                Plotly.plot('{{ graphs }}', graph, {});
-            </script>
-        {% endfor %}
-    {% endif %}
 {% endblock %}
