@@ -33,32 +33,8 @@ app.secret_key = "super secret key"
 
 @app.route('/')
 def index():
-    # Graph
-    # x = year, y = factor, output = country
-    df = pd.DataFrame(dict(
-        Year=[1990, 1993, 1995, 2001],
-        Lack_of_Educational_Opportunities=[1, 2, 3, 4]
-    ))
+    # Filter values
 
-    # Rename dataframe keys so that x and y-axis names are more general
-    df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
-
-    fig1 = px.line(df, x="year", y="countries", title="Lack of Educational Opportunities")
-    graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-
-    # Example graph
-    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
-    fig2 = px.bar(df, y='pop', x='country', text_auto='.2s',
-                  title="Controlled text sizes, positions and angles")
-    fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
-
-    graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
-
-
-@app.route('/filter', methods=['GET'])
-def filter():
     # country
     Country = request.args.get('Country')
 
@@ -72,10 +48,22 @@ def filter():
     start_year = request.args.get('start_year')
     end_year = request.args.get('end_year')
 
-    if int(start_year) < 1990:
-        start_year = 1990
+    if start_year != None and end_year != None:
+        try:
+            if int(start_year) < 1990:
+                start_year = 1990
+            else:
+                start_year = int(start_year)
 
-    if int(end_year) > 2020:
+            if int(end_year) > 2020:
+                end_year = 2020
+            else:
+                end_year = int(end_year)
+        except:
+            start_year = 1990
+            end_year = 2020
+    else:
+        start_year = 1990
         end_year = 2020
 
     # Factors
@@ -86,7 +74,29 @@ def filter():
     CPI = request.args.get('CPI')
     Income_Polarization = request.args.get('Income_Polarization')
 
-    return render_template('index.html')
+    # Graph
+    # x = year, y = factor, output = country
+    df = pd.DataFrame(dict(
+        Year=[1990, 1993, 1995, 2001, 2003, 2005, 2008, 2010, 2011, 2014, 2016, 2019, 2020],
+        Lack_of_Educational_Opportunities=[1, 2, 3, 4, 6, 9, 12, 15, 16, 19, 23, 30, 40]
+    ))
+
+    # Rename dataframe keys so that x and y-axis names are more general
+    df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
+
+    fig1 = px.line(df, x="year", y="countries", title="Lack of Educational Opportunities")
+    graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+    # Example graph
+    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
+    fig2 = px.bar(df, y='pop', x='country', text_auto='.2s',
+                  title="Controlled text sizes, positions and angles")
+    fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+
+    graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
 
 
 @app.route('/upload_files', methods=['GET', 'POST'])
