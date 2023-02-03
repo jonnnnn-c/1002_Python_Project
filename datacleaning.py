@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 
 
 #Clean Crime Rates Data and extract data
