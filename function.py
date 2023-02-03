@@ -4,7 +4,7 @@ import os
 
 
 #Clean Crime Rates Data and extract data
-def cleanCrimedata(filename,country,startyear,endyear):
+def cleanCrimedata(filename,startyear,endyear):
     df = pd.read_csv(filename,skiprows=16)
     #print(df[" Per 100K Population"][3])
     datasetstartyear = int((df["date"][0])[:4])
@@ -12,17 +12,17 @@ def cleanCrimedata(filename,country,startyear,endyear):
     #ensure the year range is appropriate for the dataset
     startyear,endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
 
-    print(endyear)
-
-    print(datasetendyear)
     startrow = startyear - datasetstartyear
-    print(datasetstartyear)
     newdata = []
     yearlist = []
-
-    for year in range(endyear-startyear+1):
-        newdata.append(float(df[" Per 100K Population"][startrow+year]))
-        yearlist.append(int(startyear+year))
+    
+    for year in range(startyear,endyear+1):
+        for row in range(endyear-startyear-1):
+            if int(df["date"][startrow+row][:4]) == year:
+                newdata.append(float(df[" Per 100K Population"][startrow+row]))
+                yearlist.append(int(year))
+        
+        
     dict1 = {"Year":yearlist, 'Crime Rates Per 100k Population':newdata}
     newdf = pd.DataFrame (dict1)
     return newdf
