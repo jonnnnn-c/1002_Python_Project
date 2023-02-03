@@ -35,14 +35,18 @@ app.secret_key = "super secret key"
 def index():
     # Graph
 
-    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
-    fig = px.bar(df, y='pop', x='country', text_auto='.2s',
-                 title="Controlled text sizes, positions and angles")
-    fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+    df = pd.DataFrame(dict(
+        x=[1, 3, 2, 4],
+        y=[1, 2, 3, 4]
+    ))
+    fig1 = px.line(df, x="x", y="y", title="Unsorted Input")
+    graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
 
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    df = df.sort_values(by="x")
+    fig2 = px.line(df, x="x", y="y", title="Sorted Input")
+    graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('index.html', graphJSON=graphJSON)
+    return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
 
 @app.route('/filter', methods=['GET'])
 def filter():
