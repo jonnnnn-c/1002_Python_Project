@@ -83,90 +83,92 @@ def index():
     is_filter = True
     graphJSON = []
 
-    if Consumer_Price_Index == 'T':
-        clean_data = cleanCPIdata(file2, start_year, end_year)
-        print(clean_data)
+    if 'T' in [Consumer_Price_Index, Income_Polarization, Enrolment, Family, Poverty]:
 
-        columns = [col for col in clean_data.columns]
-        column_1_values = [col for col in clean_data[columns[0]]]
-        column_2_values = [col for col in clean_data[columns[1]]]
+        if Consumer_Price_Index == 'T':
+            clean_data = cleanCPIdata(file2, start_year, end_year)
+            print(clean_data)
 
-        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+            columns = [col for col in clean_data.columns]
+            column_1_values = [col for col in clean_data[columns[0]]]
+            column_2_values = [col for col in clean_data[columns[1]]]
 
-        fig1 = px.line(df, x='x', y='y', title="Consumer Price Index").update_layout(
-            xaxis_title=columns[0],
-            yaxis_title=columns[1])
+            df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON.append(graph1JSON)
+            fig1 = px.line(df, x='x', y='y', title="Consumer Price Index").update_layout(
+                xaxis_title=columns[0],
+                yaxis_title=columns[1])
 
-    if Income_Polarization == 'T':
-        clean_data = cleanIncomedata(file3, Country, start_year, end_year)
-        print(clean_data)
+            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graphJSON.append(graph1JSON)
 
-        columns = [col for col in clean_data.columns]
-        column_1_values = [col for col in clean_data[columns[0]]]
-        column_2_values = [col for col in clean_data[columns[1]]]
+        if Income_Polarization == 'T':
+            clean_data = cleanIncomedata(file3, Country, start_year, end_year)
+            print(clean_data)
 
-        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+            columns = [col for col in clean_data.columns]
+            column_1_values = [col for col in clean_data[columns[0]]]
+            column_2_values = [col for col in clean_data[columns[1]]]
 
-        fig1 = px.line(df, x='x', y='y', title="Income Polarization").update_layout(
-            xaxis_title=columns[0],
-            yaxis_title=columns[1])
+            df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON.append(graph1JSON)
+            fig1 = px.line(df, x='x', y='y', title="Income Polarization").update_layout(
+                xaxis_title=columns[0],
+                yaxis_title=columns[1])
 
-    if Enrolment == 'T':
-        clean_data = cleanEnroldata(file5, Country, start_year, end_year)
-        print(clean_data)
+            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graphJSON.append(graph1JSON)
 
-        columns = [col for col in clean_data.columns]
-        column_1_values = [col for col in clean_data[columns[0]]]
-        column_2_values = [col for col in clean_data[columns[1]]]
+        if Enrolment == 'T':
+            clean_data = cleanEnroldata(file5, Country, start_year, end_year)
+            print(clean_data)
 
-        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+            columns = [col for col in clean_data.columns]
+            column_1_values = [col for col in clean_data[columns[0]]]
+            column_2_values = [col for col in clean_data[columns[1]]]
 
-        fig1 = px.line(df, x='x', y='y', title="Enrolment").update_layout(
-            xaxis_title=columns[0],
-            yaxis_title=columns[1])
+            df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON.append(graph1JSON)
+            fig1 = px.line(df, x='x', y='y', title="Enrolment").update_layout(
+                xaxis_title=columns[0],
+                yaxis_title=columns[1])
 
-    if Family == 'T':
-        clean_data = cleanFamilyData(file7, Country, start_year, end_year)
-        print(clean_data)
+            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graphJSON.append(graph1JSON)
 
-        columns = [col for col in clean_data.columns]
-        column_1_values = [col for col in clean_data[columns[0]]]
-        column_2_values = [col for col in clean_data[columns[1]]]
+        if Family == 'T':
+            clean_data = cleanFamilyData(file7, Country, start_year, end_year)
+            print(clean_data)
 
-        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+            columns = [col for col in clean_data.columns]
+            column_1_values = [col for col in clean_data[columns[0]]]
+            column_2_values = [col for col in clean_data[columns[1]]]
 
-        fig1 = px.line(df, x='x', y='y', title="Family").update_layout(
-            xaxis_title=columns[0],
-            yaxis_title=columns[1])
+            df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON.append(graph1JSON)
+            fig1 = px.line(df, x='x', y='y', title="Family").update_layout(
+                xaxis_title=columns[0],
+                yaxis_title=columns[1])
 
-    if Poverty == 'T':
-        clean_data = cleanPovertydata(file6, Country, start_year, end_year)
-        print(clean_data)
+            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graphJSON.append(graph1JSON)
 
-        columns = [col for col in clean_data.columns]
-        column_1_values = [col for col in clean_data[columns[0]]]
-        column_2_values = [col for col in clean_data[columns[1]]]
+        if Poverty == 'T':
+            clean_data = cleanPovertydata(file6, Country, start_year, end_year)
+            print(clean_data)
 
-        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+            columns = [col for col in clean_data.columns]
+            column_1_values = [col for col in clean_data[columns[0]]]
+            column_2_values = [col for col in clean_data[columns[1]]]
 
-        fig1 = px.line(df, x='x', y='y', title="Poverty").update_layout(
-            xaxis_title=columns[0],
-            yaxis_title=columns[1])
+            df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        graphJSON.append(graph1JSON)
+            fig1 = px.line(df, x='x', y='y', title="Poverty").update_layout(
+                xaxis_title=columns[0],
+                yaxis_title=columns[1])
+
+            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graphJSON.append(graph1JSON)
 
     else:
         is_filter = False
