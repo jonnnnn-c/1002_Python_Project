@@ -110,7 +110,7 @@ def upload():
 def delete_file(filename):
     # TODO: NOT WORKING REMEMBER DO
     os.remove(os.path.join(app.root_path, 'datasets_user', filename))
-    return redirect(url_for("upload_files"))
+    return redirect(url_for("upload"))
 
 
 @app.route('/display_file/<filename>', methods=['GET'])
