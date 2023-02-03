@@ -86,7 +86,7 @@ def index():
     if 'T' in [Consumer_Price_Index, Income_Polarization, Enrolment, Family, Poverty]:
 
         if Consumer_Price_Index == 'T':
-            clean_data = cleanCPIdata(file2, start_year, end_year)
+            clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_"+convertname(Country)+".xlsx", start_year, end_year)
             print(clean_data)
 
             columns = [col for col in clean_data.columns]

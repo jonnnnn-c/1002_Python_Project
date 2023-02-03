@@ -263,11 +263,24 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
     if dataendyear < userendyear:
         userendyear = dataendyear
     return userstartyear, userendyear
-   
-    
 
-file1 = "data/CrimeRates/brazil-crime-rate-statistics.csv"
-file2 = "data/CosumerPriceIndex/CPI_IN.xlsx"
+def convertname(Country):
+    convert_dict = {
+        "USA": "USA",
+        "Singapore": "SG",
+        "Japan":"JP",
+        "Brazil":"BZ",
+        "Jamaica":"JM",
+        "France":"FR",
+        "Philippines":"PH",
+        "India":"IN",
+        "South Afrcia":"SA",
+        "Mexico":"MX"
+    }
+    return convert_dict[Country]
+
+# file1 = "data/CrimeRates/"+country.replace(" ","-").lower()+"-crime-rate-statistics.csv"
+# file2 = "data/CosumerPriceIndex/CPI_"+convertname(country)+".xlsx"
 file3 = "data/IncomePolarization/IncomeInequality_World.xls"
 file4 = "data/GeneralFileType/test.json"
 file5 = "data/enrollment.csv"
