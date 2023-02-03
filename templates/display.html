@@ -29,5 +29,9 @@
     <h1>{% block title %}{% endblock %}</h1>
     <h3>The contents of {{ filename }}</h3>
     {{ data_var|safe }}
+
+    <br>
+    <a href="{{ url_for('upload') }}" style="border: none; height: auto; margin-right: 15px;" class="btn btn-primary"><i class="fa fa-trash fa-2x"></i>Back</a>
+
     
 {% endblock %}
