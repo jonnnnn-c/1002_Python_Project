@@ -112,7 +112,6 @@ def cleanJsondata(filename,Country, startyear,endyear):
 
     return newdf
 
-
 def cleanEnroldata(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country
@@ -266,7 +265,7 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
 
 def convertname(Country):
     convert_dict = {
-        "USA": "USA",
+        "United States": "USA",
         "Singapore": "SG",
         "Japan":"JP",
         "Brazil":"BZ",
@@ -274,7 +273,7 @@ def convertname(Country):
         "France":"FR",
         "Philippines":"PH",
         "India":"IN",
-        "South Afrcia":"SA",
+        "South Africa":"SA",
         "Mexico":"MX"
     }
     return convert_dict[Country]
@@ -288,6 +287,17 @@ file6 = "data/poverty-explorer.csv"
 file7 = "data/family.csv"
 file8 = "datasets_user/test.csv"
 file9 = "datasets_user/test.txt"
+
+# Country = 'United States'
+# Country = 'France'
+Country = 'Japan'
+start_year = 1990
+end_year = 2020
+# clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", Country, start_year, end_year)
+# print(clean_data)
+
+clean_data = cleanEnroldata(file5, Country, start_year, end_year)
+print(clean_data)
 
 #print(cleanCrimedata(file1," Brazil",1985,3000))
 #print(cleanCPIdata(file2,1980,2010))
