@@ -9,20 +9,10 @@
                     <div class="col-sm" id="Factor_filter" style="padding-right: 0px">
                         <h4>Factor Filter:</h4><br>
 
-                        <input type="checkbox" id="Consumer_Price_Index" name="Consumer_Price_Index" value="T">
-                        <label for="Consumer_Price_Index" style="padding-left: 10px;">Consumer Price Index</label><br>
-
-                        <input type="checkbox" id="Income_Polarization" name="Income_Polarization" value="T">
-                        <label for="Income_Polarization" style="padding-left: 10px;">Income Polarization</label><br>
-
-                        <input type="checkbox" id="Enrolment" name="Enrolment" value="T">
-                        <label for="Enrolment" style="padding-left: 10px;">Enrolment</label><br>
-
-                        <input type="checkbox" id="Family" name="Family" value="T">
-                        <label for="Family" style="padding-left: 10px;">Family</label><br>
-
-                        <input type="checkbox" id="Poverty" name="Poverty" value="T">
-                        <label for="Poverty" style="padding-left: 10px;">Poverty</label><br>
+                        {% for factor in factors %}
+                            <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T">
+                            <label for="{{ factor }}" style="padding-left: 10px;">{{ factor }}</label><br>
+                        {% endfor %}
                     </div>
 
                     <div class="col-md" id="Year_filter" style="padding-left: 0px">
