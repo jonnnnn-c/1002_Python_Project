@@ -16,7 +16,6 @@ NOTES:
 • path to datasets: os.path.join(app.root_path, 'datasets', filename)
 
 """
-import json
 import time
 
 import humanize
@@ -26,6 +25,8 @@ from flask import *
 from werkzeug.utils import secure_filename
 
 from function import *
+
+import json
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
