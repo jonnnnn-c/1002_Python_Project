@@ -2,6 +2,7 @@ import pandas as pd
 import os
 
 
+
 #Clean Crime Rates Data and extract data
 def cleanCrimedata(filename,country,startyear,endyear):
     df = pd.read_csv(filename,skiprows=16)
@@ -17,11 +18,13 @@ def cleanCrimedata(filename,country,startyear,endyear):
     startrow = startyear - datasetstartyear
     print(datasetstartyear)
     newdata = []
+    yearlist = []
 
     for year in range(endyear-startyear+1):
         newdata.append(float(df[" Per 100K Population"][startrow+year]))
-
-    newdf = pd.DataFrame (newdata, columns = ['Crime Rates Per 100k Population'])
+        yearlist.append(int(startyear+year))
+    dict1 = {"Year":yearlist, 'Crime Rates Per 100k Population':newdata}
+    newdf = pd.DataFrame (dict1)
     return newdf
 
 #Clean CPI Data XLSX and extract data
@@ -29,6 +32,7 @@ def cleanCPIdata(filename,startyear,endyear):
     df = pd.read_excel(filename)
     #print(df.loc[1][1]) #starts from column 1 row 4, get value from start of each year so column = 12*n-1, starting from when crime rates starts recording
     newdata = []
+    yearlist = []
     datasetstartcol = 0
 
     ####Finds for which col the data starts to show
@@ -53,8 +57,9 @@ def cleanCPIdata(filename,startyear,endyear):
     for year in range(endyear-startyear+1):
         #newdata.append(float(df.loc[4][startcol+year*12]))
         newdata.append(float(df.loc[4][startcol+year*12]))
-
-    newdf = pd.DataFrame (newdata, columns = ['Consumer Price Index'])
+        yearlist.append(int(startyear+year))
+    dict1 = {"Year":yearlist, 'Consumer Price Index':newdata}
+    newdf = pd.DataFrame (dict1) 
 
     return newdf
 
@@ -64,6 +69,7 @@ def cleanIncomedata(filename,country,startyear,endyear):
     df = pd.read_excel(filename, sheet_name="Data")
     countrylist = df["Country"]
     newdata = []
+    yearlist = []
     rownum = 0
 
     
@@ -76,21 +82,25 @@ def cleanIncomedata(filename,country,startyear,endyear):
     for year in range(endyear-startyear+1):
         #print(float(df.loc[rownum+1][startyear-1990+34+year]))
         newdata.append(float(df.loc[rownum+1][startyear-1990+34+year])-float(df.loc[rownum][startyear-1990+2+year]))
-        #newdata += list(df.loc[rownum+1][startyear-1990+2+year]-df.loc[rownum][startyear-1990+28+year]) #Top percentile - bottom 50 percentile for each year to create a new list of data
+            #Top percentile - bottom 50 percentile for each year to create a new list of data
     #Length of list depend on how many years to show
     #Adding 2 and 34 is for column position offset 
 
-    newdf = pd.DataFrame (newdata, columns = ["Income Inequality"])
-    return newdf
+        yearlist.append(int(startyear+year))
+    dict1 = {"Year":yearlist, "Income Inequality":newdata}
+    newdf = pd.DataFrame (dict1)
 
+    return newdf
+'''
 def cleanJsondata(filename, startyear,endyear):
     df = pd.read_json(filename)
     print(pd.DataFrame(df))
-
+'''
 def cleanEnroldata(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country
     newdata = []
+    yearlist = []
     rownum = 0
     check = False
     
@@ -110,21 +120,21 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     for year in range(startyear,endyear+1):
         for row in range(len(countrylist)):
             if df.loc[rownum+row][2] == year:
-                print( df.loc[rownum+row][2])
                 newdata.append(float(df.loc[rownum+row][3]))
+                yearlist.append(int(year))
                 break
-            
-        #newdata += list(df.loc[rownum+1][startyear-1990+2+year]-df.loc[rownum][startyear-1990+28+year]) #Top percentile - bottom 50 percentile for each year to create a new list of data
-    #Length of list depend on how many years to show
-    #Adding 2 and 34 is for column position offset 
-    print(newdata)
-    newdf = pd.DataFrame (newdata, columns = ["Income Inequality"])
+    
+   
+    dict1 = {"Year":yearlist, 'Gross enrolment ratio, secondary, both sexes (%)':newdata}
+    newdf = pd.DataFrame (dict1) 
+
     return newdf
 
 def cleanPovertydata(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country GINI data at GH = 190
     newdata = []
+    yearlist = []
     rownum = 0
     check = False
 
@@ -147,15 +157,21 @@ def cleanPovertydata(filename, Country, startyear, endyear):
             if df["survey_year"][rownum+row] == year:
                 
                 newdata.append(float(df["gini"][rownum+row]))
+                yearlist.append(int(year))
+                
+
                 break
-    print(newdata)
-    newdf = pd.DataFrame(newdata,columns=["Gini Index"])
+
+    dict1 = {"Year":yearlist, 'Gini Index':newdata}
+    newdf = pd.DataFrame (dict1) 
+
     return newdf
     
 def cleanFamilyData(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country GINI data at GH = 190
     newdata = []
+    yearlist = []
     endrow, rownum = 0, 0
     check = False
 
@@ -175,11 +191,13 @@ def cleanFamilyData(filename, Country, startyear, endyear):
     for year in range(startyear,endyear+1):
         for row in range(endrow-rownum):
             if df["Year"][rownum + row] == year:
-               
                 newdata.append(float(df["Share of single parent families"][rownum+row]))
+                yearlist.append(int(year))
                 break
     
     newdf = pd.DataFrame(newdata,columns=["Share of single parent families"])
+    dict1 = {"Year":yearlist, 'Share of single parent families':newdata}
+    newdf = pd.DataFrame (dict1) 
     return newdf
 
 def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
@@ -198,11 +216,16 @@ file4 = "Data/JsonTesting/test.json"
 file5 = "Data/enrollment.csv"
 file6 = "Data/poverty-explorer.csv"
 file7 = "Data/family.csv"
-#cleanCrimedata(file1," Brazil",1985,3000)
-#cleanCPIdata(file2,1980,2010)
-#cleanIncomedata(file3," Brazil",2000,2010)
-#cleanJsondata(file4,1990,1992)
-#cleanEnroldata(file5,"Brazil" ,1999,3005)
-#cleanPovertydata(file6,"Brazil", 2000,2005)
-#cleanFamilyData(file7, "Brazil",1000,2012)
+#print(cleanCrimedata(file1," Brazil",1985,3000))
+#print(cleanCPIdata(file2,1980,2010))
+#print(cleanIncomedata(file3," Brazil",2000,2010))
+#print(cleanJsondata(file4,1990,1992))
+#print(cleanEnroldata(file5,"Brazil" ,1999,3005))
+#print(cleanPovertydata(file6,"Brazil", 2000,2005))
+#print(cleanFamilyData(file7, "Brazil",1000,2012))
 
+'''
+##### TO DO #####
+Accept & Read JSON files
+Read TXT files
+'''
