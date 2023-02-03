@@ -33,10 +33,11 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 
 factors = ['Consumer_Price_Index', 'Income_Polarization', 'Enrolment', 'Family', 'Poverty']
+newfactor_data = {}
 
 @app.route('/')
 def index():
-    global factors
+    global factors, newfactor_data
     # Filter values
 
     # country
@@ -70,14 +71,6 @@ def index():
         start_year = 1990
         end_year = 2020
 
-    # Factors
-    print(request.args)
-    Consumer_Price_Index = request.args.get('Consumer_Price_Index')
-    Income_Polarization = request.args.get('Income_Polarization')
-    Enrolment = request.args.get('Enrolment')
-    Family = request.args.get('Family')
-    Poverty = request.args.get('Poverty')
-
     # GRAPH
     # Rename dataframe keys so that x and y-axis names are more general
     # df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
@@ -86,6 +79,7 @@ def index():
     is_filter = True
     graphJSON = []
 
+    # Factors
     factors_value = {}
     for factor in factors:
         if request.args.get(factor) != None:
@@ -116,11 +110,16 @@ def index():
                 clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
                 title="Poverty"
                 print(clean_data)
-            # else:
-            #     if 
-            #     clean_data = cleanPovertydata(file6, Country, start_year, end_year)
-            #     title=factor
-            #     print(clean_data)
+            else:
+                filename = newfactor_data[factor]
+                file_path = os.path.join(app.root_path, 'datasets_user', filename)
+                file_name, file_extension = os.path.splitext(filename)
+                if file_extension == '.csv' or file_extension == '.txt':
+                    clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
+                elif file_extension == '.json':
+                    clean_data = cleanJsondata(file_path,Country, start_year, end_year)
+                title=factor
+                print(clean_data)
 
             columns = [col for col in clean_data.columns]
             column_1_values = [col for col in clean_data[columns[0]]]
@@ -134,113 +133,12 @@ def index():
 
             graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
             graphJSON.append(graph1JSON)
-            
-        # Crime Rate Graph            
-        #clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
-        #print(clean_data)
 
-        #columns = [col for col in clean_data.columns]
-        #column_1_values = [col for col in clean_data[columns[0]]]
-        #column_2_values = [col for col in clean_data[columns[1]]]
-
-        #df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
-        #    xaxis_title=columns[0],
-        #    yaxis_title=columns[1])
-
-        #graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #graphJSON.append(graph1JSON)
         
-        # if Consumer_Price_Index == 'T':
-        #     clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_"+convertname(Country)+".xlsx", start_year, end_year)
-        #     print(clean_data)
-
-        #     columns = [col for col in clean_data.columns]
-        #     column_1_values = [col for col in clean_data[columns[0]]]
-        #     column_2_values = [col for col in clean_data[columns[1]]]
-
-        #     df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #     fig1 = px.line(df, x='x', y='y', title="Consumer Price Index").update_layout(
-        #         xaxis_title=columns[0],
-        #         yaxis_title=columns[1])
-
-        #     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #     graphJSON.append(graph1JSON)
-
-        # if Income_Polarization == 'T':
-        #     clean_data = cleanIncomedata(file3, Country, start_year, end_year)
-        #     print(clean_data)
-
-        #     columns = [col for col in clean_data.columns]
-        #     column_1_values = [col for col in clean_data[columns[0]]]
-        #     column_2_values = [col for col in clean_data[columns[1]]]
-
-        #     df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #     fig1 = px.line(df, x='x', y='y', title="Income Polarization").update_layout(
-        #         xaxis_title=columns[0],
-        #         yaxis_title=columns[1])
-
-        #     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #     graphJSON.append(graph1JSON)
-
-        # if Enrolment == 'T':
-        #     clean_data = cleanEnroldata(file5, Country, start_year, end_year)
-        #     print(clean_data)
-
-        #     columns = [col for col in clean_data.columns]
-        #     column_1_values = [col for col in clean_data[columns[0]]]
-        #     column_2_values = [col for col in clean_data[columns[1]]]
-
-        #     df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #     fig1 = px.line(df, x='x', y='y', title="Enrolment").update_layout(
-        #         xaxis_title=columns[0],
-        #         yaxis_title=columns[1])
-
-        #     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #     graphJSON.append(graph1JSON)
-
-        # if Family == 'T':
-        #     clean_data = cleanFamilyData(file7, Country, start_year, end_year)
-        #     print(clean_data)
-
-        #     columns = [col for col in clean_data.columns]
-        #     column_1_values = [col for col in clean_data[columns[0]]]
-        #     column_2_values = [col for col in clean_data[columns[1]]]
-
-        #     df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #     fig1 = px.line(df, x='x', y='y', title="Family").update_layout(
-        #         xaxis_title=columns[0],
-        #         yaxis_title=columns[1])
-
-        #     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #     graphJSON.append(graph1JSON)
-
-        # if Poverty == 'T':
-        #     clean_data = cleanPovertydata(file6, Country, start_year, end_year)
-        #     print(clean_data)
-
-        #     columns = [col for col in clean_data.columns]
-        #     column_1_values = [col for col in clean_data[columns[0]]]
-        #     column_2_values = [col for col in clean_data[columns[1]]]
-
-        #     df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        #     fig1 = px.line(df, x='x', y='y', title="Poverty").update_layout(
-        #         xaxis_title=columns[0],
-        #         yaxis_title=columns[1])
-
-        #     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        #     graphJSON.append(graph1JSON)
-
     else:
         is_filter = False
-        # print(Country, start_year, end_year)
-        # clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", Country, start_year, end_year)
+        # Crime Rate Graph            
+        # clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
         # print(clean_data)
 
         # columns = [col for col in clean_data.columns]
@@ -249,12 +147,12 @@ def index():
 
         # df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
 
-        # fig1 = px.line(df, x='x', y='y', title="Crime rate").update_layout(
-        #     xaxis_title=columns[0],
-        #     yaxis_title=columns[1])
+        # fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
+        #    xaxis_title=columns[0],
+        #    yaxis_title=columns[1])
 
         # graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        # graphJSON.append(graph1JSON)
+        # graphJSON.append(graph1JSON) 
 
     # List of graphs
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors)
@@ -262,7 +160,7 @@ def index():
 
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload():
-    global file_path
+    global file_path, newfactor_data
 
     if request.method == 'POST':
         newfactor = request.form.get("newfactor")
@@ -270,10 +168,12 @@ def upload():
 
         # Get the list of files from webpage
         files = request.files.getlist("file")
+        print(files)
 
         # Iterate for each file in the files List, and Save them
         for file in files:
             filename = secure_filename(file.filename)
+            newfactor_data[newfactor] = filename
             file_path = os.path.join(app.root_path, 'datasets_user', filename)
             file.save(file_path)
 
@@ -325,8 +225,6 @@ def display(filename):
     except Exception as e:
         print(e)
         df_html = "<h5>Error in displaying File contents</h5>"
-    # except ValueError:
-    #     df_html = "<h5>Error in displaying File contents</h5>"
     return render_template('display.html', data_var=df_html, filename=filename)
 
 
