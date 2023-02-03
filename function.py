@@ -91,11 +91,14 @@ def cleanIncomedata(filename,country,startyear,endyear):
     newdf = pd.DataFrame (dict1)
 
     return newdf
-'''
-def cleanJsondata(filename, startyear,endyear):
-    df = pd.read_json(filename)
-    print(pd.DataFrame(df))
-'''
+
+def cleanJsondata(filename,Country, startyear,endyear):
+    df = (pd.read_json(filename))["CountryList"][Country]
+    datasetstartyear,datasetendyear = list(df.keys())[0],list(df.keys())[-1]
+    print(datasetstartyear,datasetendyear)
+    #print(df[Country])      
+
+
 def cleanEnroldata(filename, Country, startyear, endyear):
     df = pd.read_csv(filename)
     countrylist = df["Entity"] #List out all country
@@ -109,10 +112,12 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
             datasetstartyear = df.loc[i][2]
+            rownum = i
             check = True
         if countrylist[i] != Country and check == True:
             datasetendyear = df.loc[i-1][2]
             break
+
             
     startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
     
@@ -135,7 +140,7 @@ def cleanPovertydata(filename, Country, startyear, endyear):
     countrylist = df["Entity"] #List out all country GINI data at GH = 190
     newdata = []
     yearlist = []
-    rownum = 0
+    rownum,endrow = 0,0
     check = False
 
     datasetstartyear,datasetendyear = 0,0
@@ -143,17 +148,17 @@ def cleanPovertydata(filename, Country, startyear, endyear):
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
             datasetstartyear = df["survey_year"][i]
-            
+            rownum = i
             check = True
         if countrylist[i] != Country and check == True:
             datasetendyear = df["survey_year"][i-1]
-            
+            endrow = i
             break
     
     startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
 
     for year in range(startyear,endyear+1):
-        for row in range(len(countrylist)):
+        for row in range(endrow-rownum):
             if df["survey_year"][rownum+row] == year:
                 
                 newdata.append(float(df["gini"][rownum+row]))
@@ -219,9 +224,9 @@ file7 = "Data/family.csv"
 #print(cleanCrimedata(file1," Brazil",1985,3000))
 #print(cleanCPIdata(file2,1980,2010))
 #print(cleanIncomedata(file3," Brazil",2000,2010))
-#print(cleanJsondata(file4,1990,1992))
-#print(cleanEnroldata(file5,"Brazil" ,1999,3005))
-#print(cleanPovertydata(file6,"Brazil", 2000,2005))
+#print(cleanJsondata(file4,"Brazil",1990,1992))
+#print(cleanEnroldata(file5,"Brazil" ,2002,2015))
+print(cleanPovertydata(file6,"Brazil", 2000,2005))
 #print(cleanFamilyData(file7, "Brazil",1000,2012))
 
 '''
