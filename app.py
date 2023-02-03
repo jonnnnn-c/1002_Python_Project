@@ -34,28 +34,38 @@ app.secret_key = "super secret key"
 @app.route('/')
 def index():
     # Graph
-
+    # x = year, y = factor, output = country
     df = pd.DataFrame(dict(
-        x=[1, 3, 2, 4],
-        y=[1, 2, 3, 4]
+        Year=[1990, 1993, 1995, 2001],
+        Lack_of_Educational_Opportunities=[1, 2, 3, 4]
     ))
-    fig1 = px.line(df, x="x", y="y", title="Unsorted Input")
+
+    # Rename dataframe keys so that x and y-axis names are more general
+    df.rename(columns={'Year': 'year', 'Lack_of_Educational_Opportunities': 'countries'}, inplace=True)
+
+    fig1 = px.line(df, x="year", y="countries", title="Lack of Educational Opportunities")
     graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
 
-    df = df.sort_values(by="x")
-    fig2 = px.line(df, x="x", y="y", title="Sorted Input")
+    # Example graph
+    df = px.data.gapminder().query("continent == 'Europe' and year == 2007 and pop > 2.e6")
+    fig2 = px.bar(df, y='pop', x='country', text_auto='.2s',
+                  title="Controlled text sizes, positions and angles")
+    fig2.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+
     graph2JSON = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template('index.html', graph1JSON=graph1JSON, graph2JSON=graph2JSON)
+
 
 @app.route('/filter', methods=['GET'])
 def filter():
     # country
     Country = request.args.get('Country')
 
-    countries = ['USA', 'Singapore', 'Japan', 'Brazil', 'Jamaica', 'France', 'Philippines', 'India', 'South Afrcia', 'Mexico']
+    countries = ['USA', 'Singapore', 'Japan', 'Brazil', 'Jamaica', 'France', 'Philippines', 'India', 'South Afrcia',
+                 'Mexico']
 
-    if not(Country in countries):
+    if not (Country in countries):
         Country = 'USA'
 
     # start and end year
@@ -75,8 +85,6 @@ def filter():
     Dysfunctional_family = request.args.get('Dysfunctional_family')
     CPI = request.args.get('CPI')
     Income_Polarization = request.args.get('Income_Polarization')
-
-    
 
     return render_template('index.html')
 
@@ -140,7 +148,7 @@ def display(filename):
             df_html = df.to_html(classes='mystyle')
         else:
             df_html = "<h5>File extension not supported</h5>"
-    except Exception as e: 
+    except Exception as e:
         print(e)
         df_html = "<h5>Error in displaying File contents</h5>"
     # except ValueError:
