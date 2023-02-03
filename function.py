@@ -13,11 +13,13 @@ def cleanCrimedata(filename,startyear,endyear):
     startyear,endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
 
     startrow = startyear - datasetstartyear
+    print(startrow)
     newdata = []
     yearlist = []
+    print(startrow,endyear,startyear)
     
     for year in range(startyear,endyear+1):
-        for row in range(endyear-startyear-1):
+        for row in range(len(df["date"])):
             if int(df["date"][startrow+row][:4]) == year:
                 newdata.append(float(df[" Per 100K Population"][startrow+row]))
                 yearlist.append(int(year))
