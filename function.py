@@ -93,10 +93,24 @@ def cleanIncomedata(filename,country,startyear,endyear):
     return newdf
 
 def cleanJsondata(filename,Country, startyear,endyear):
-    df = (pd.read_json(filename))["CountryList"][Country]
-    datasetstartyear,datasetendyear = list(df.keys())[0],list(df.keys())[-1]
-    print(datasetstartyear,datasetendyear)
-    #print(df[Country])      
+    df = (pd.read_json(filename))
+    newdf = df["CountryList"][Country]
+    datasetstartyear,datasetendyear = int(list(newdf.keys())[0]),int(list(newdf.keys())[-1])
+    newdata = []
+    yearlist = []
+    factor = df["Factor"][1]
+    print(factor)
+    startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
+    
+    for year in range(startyear,endyear+1):
+        if str(year) in list(newdf.keys()):
+            newdata.append(newdf[str(year)])
+            yearlist.append(year)
+    
+    dict1 = {"Year":yearlist, str(factor):newdata}
+    newdf = pd.DataFrame (dict1)
+
+    return newdf
 
 
 def cleanEnroldata(filename, Country, startyear, endyear):
@@ -199,9 +213,47 @@ def cleanFamilyData(filename, Country, startyear, endyear):
                 newdata.append(float(df["Share of single parent families"][rownum+row]))
                 yearlist.append(int(year))
                 break
-    
-    newdf = pd.DataFrame(newdata,columns=["Share of single parent families"])
+
     dict1 = {"Year":yearlist, 'Share of single parent families':newdata}
+    newdf = pd.DataFrame (dict1) 
+    return newdf
+
+#Can clean csv and txt file type
+def cleanCSVTXTdata(filename, Country, startyear, endyear):
+    df = ""
+    if filename[-3:] == "csv":
+        df = pd.read_csv(filename)
+    elif filename[-3:] == "txt":
+        df = pd.read_csv(filename, sep=" ")
+    countrylist = df["Country"]
+    newdata = []
+    yearlist = []
+    endrow, rownum = 0, 0
+    check = False
+    factor = df.columns[2]
+
+    datasetstartyear,datasetendyear = 0,0
+
+    for i in range(len(countrylist)):
+        if countrylist[i] == Country and check == False:
+            datasetstartyear = int(df["Year"][i])
+            rownum = i
+            check = True
+        if countrylist[i] == Country and check == True:
+            datasetendyear = int(df["Year"][i])
+            endrow = i
+            
+    startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
+    print(startyear,datasetendyear)
+    for year in range(startyear,endyear+1):
+        for row in range(rownum,endrow):
+            if int(df["Year"][rownum + row]) == year:
+                print(df["Year"][rownum+row])
+                newdata.append(float(df[factor][rownum+row]))
+                yearlist.append(int(year))
+                break
+    
+    dict1 = {"Year":yearlist, factor :newdata}
     newdf = pd.DataFrame (dict1) 
     return newdf
 
@@ -217,20 +269,19 @@ def yearrangeChecker(datastartyear, dataendyear, userstartyear, userendyear):
 file1 = "Data/CrimeRates/brazil-crime-rate-statistics.csv"
 file2 = "Data/ConcumerPriceIndex/CPI_IN.xlsx"
 file3 = "Data/IncomePolarization/IncomeInequality_World.xls"
-file4 = "Data/JsonTesting/test.json"
+file4 = "Data/GeneralFileType/test.json"
 file5 = "Data/enrollment.csv"
 file6 = "Data/poverty-explorer.csv"
 file7 = "Data/family.csv"
+file8 = "Data/GeneralFileType/test.csv"
+file9 = "Data/GeneralFileType/test.txt"
+
 #print(cleanCrimedata(file1," Brazil",1985,3000))
 #print(cleanCPIdata(file2,1980,2010))
 #print(cleanIncomedata(file3," Brazil",2000,2010))
-#print(cleanJsondata(file4,"Brazil",1990,1992))
+#print(cleanJsondata(file4,"Brazil",1995,1999))
 #print(cleanEnroldata(file5,"Brazil" ,2002,2015))
-print(cleanPovertydata(file6,"Brazil", 2000,2005))
+#print(cleanPovertydata(file6,"Brazil", 2000,2005))
 #print(cleanFamilyData(file7, "Brazil",1000,2012))
-
-'''
-##### TO DO #####
-Accept & Read JSON files
-Read TXT files
-'''
+#print(cleanCSVdata(file8,"Japan",1995,2000))
+#print(cleanCSVTXTdata(file9,"Mexico",1995,2000))
