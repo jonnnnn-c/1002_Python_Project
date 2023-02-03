@@ -84,7 +84,7 @@ def index():
     graphJSON = []
 
     if Consumer_Price_Index == 'T':
-        clean_data = cleanCPIdata(file2, 1980, 2010)
+        clean_data = cleanCPIdata(file2, start_year, end_year)
         print(clean_data)
 
         columns = [col for col in clean_data.columns]
@@ -101,7 +101,7 @@ def index():
         graphJSON.append(graph1JSON)
 
     if Income_Polarization == 'T':
-        clean_data = cleanIncomedata(file3, "Brazil", 2000, 2010)
+        clean_data = cleanIncomedata(file3, Country, start_year, end_year)
         print(clean_data)
 
         columns = [col for col in clean_data.columns]
@@ -118,7 +118,7 @@ def index():
         graphJSON.append(graph1JSON)
 
     if Enrolment == 'T':
-        clean_data = cleanEnroldata(file5, "Brazil", 1999, 3005)
+        clean_data = cleanEnroldata(file5, Country, start_year, end_year)
         print(clean_data)
 
         columns = [col for col in clean_data.columns]
@@ -135,7 +135,7 @@ def index():
         graphJSON.append(graph1JSON)
 
     if Family == 'T':
-        clean_data = cleanFamilyData(file7, "Brazil", 1000, 2012)
+        clean_data = cleanFamilyData(file7, Country, start_year, end_year)
         print(clean_data)
 
         columns = [col for col in clean_data.columns]
@@ -152,7 +152,7 @@ def index():
         graphJSON.append(graph1JSON)
 
     if Poverty == 'T':
-        clean_data = cleanPovertydata(file6, "Brazil", 2000, 2005)
+        clean_data = cleanPovertydata(file6, Country, start_year, end_year)
         print(clean_data)
 
         columns = [col for col in clean_data.columns]
