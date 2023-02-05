@@ -19,6 +19,24 @@
                 scroll-behavior: smooth;
             }
 
+            body{
+                min-height: 100vh;
+                margin: 0;
+
+                display: grid;
+                grid-template-rows: auto 1fr auto;
+            }
+
+            header{
+                min-height:50px;
+                background:lightcyan;
+            }
+
+            footer{
+                min-height:50px;
+                background:PapayaWhip;
+            }
+
             .paddings {
                 padding-top: 2%;
                 padding-left: 1%
@@ -73,7 +91,7 @@
 
         <!-- Copyrights -->
         <br><br><br>
-        <footer style="position: fixed; bottom: 0; width: 100%;">
+        <footer>
             <div class="bg-light py-4">
                 <div class="container text-center">
                     <p class="text-muted mb-0 py-2">Copyright &copy; Fixing Crime In Our Time 2023.</p>
