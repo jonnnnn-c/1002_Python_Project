@@ -74,7 +74,9 @@ def cleanIncomedata(filename,country,startyear,endyear):
     newdata = []
     yearlist = []
     rownum = 0
-
+    if country == "United States":
+        country = "USA"
+    country = " "+country
     
 
     for i in range(len(countrylist)):
@@ -101,7 +103,7 @@ def cleanJsondata(filename,Country, startyear,endyear):
     datasetstartyear,datasetendyear = int(list(newdf.keys())[0]),int(list(newdf.keys())[-1])
     newdata = []
     yearlist = []
-    factor = df["Factor"][1]
+    factor = df["Factor"]
     print(factor)
     startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
     
@@ -250,7 +252,7 @@ def cleanCSVTXTdata(filename, Country, startyear, endyear):
     startyear, endyear = yearrangeChecker(datasetstartyear,datasetendyear,startyear,endyear)
     print(startyear,datasetendyear)
     for year in range(startyear,endyear+1):
-        for row in range(rownum,endrow):
+        for row in range(rownum,endrow+1):
             if int(df["Year"][rownum + row]) == year:
                 print(df["Year"][rownum+row])
                 newdata.append(float(df[factor][rownum+row]))
