@@ -16,7 +16,7 @@
         <h3>Upload</h3>
         <br>
         <form action = "/upload_files" method="POST" enctype="multipart/form-data">
-            <label for="newfactor">Factor to add</label>
+            <label for="newfactor">Factor to add:&nbsp;&nbsp;</label>
             <input type="text" id="newfactor" name="newfactor" required>
             <br><br>
             <input type="file" name="file"/>
@@ -36,6 +36,7 @@
     </section>
 
     <section>
+        <br>
         <h3>Uploaded datasets</h3>
         <br>
         {% for filename, file_information in files.items() %}
