@@ -22,6 +22,7 @@ import time
 import humanize
 import plotly
 import plotly.express as px
+from plotly.subplots import make_subplots
 from flask import *
 from werkzeug.utils import secure_filename
 
@@ -78,6 +79,7 @@ def index():
 
     is_filter = True
     graphJSON = []
+    
 
     # Factors
     factors_value = {}
@@ -87,9 +89,32 @@ def index():
 
     # check if dict is empty -> no factors
     if bool(factors_value):
+        clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
+        print(clean_data)
 
+        columns = [col for col in clean_data.columns]
+        column_1_values = [col for col in clean_data[columns[0]]]
+        column_2_values = [col for col in clean_data[columns[1]]]
+
+        df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
+
+        fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+
+        fig2 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
+            xaxis_title=columns[0],
+            yaxis_title=columns[1])
+        fig2['data'][0]['showlegend']=True
+        fig2['data'][0]['name']='Crime Rates'
+   
+        fig2.update_traces(yaxis="y2")
+
+        graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+        graphJSON.append(graph1JSON) 
         for factor in factors_value:
             print(factor)
+            subfig = make_subplots(specs=[[{"secondary_y": True}]])
             if factor == 'Consumer_Price_Index':
                 clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_"+convertname(Country)+".xlsx", start_year, end_year)
                 title="Consumer Price Index"
@@ -111,7 +136,7 @@ def index():
                 title="Poverty"
                 print(clean_data)
             else:
-                filename = newfactor_data[factor]
+                filename = newfactor_data[factor][Country]
                 file_path = os.path.join(app.root_path, 'datasets_user', filename)
                 file_name, file_extension = os.path.splitext(filename)
                 if file_extension == '.csv' or file_extension == '.txt':
@@ -130,8 +155,17 @@ def index():
             fig1 = px.line(df, x='x', y='y', title=title).update_layout(
                 xaxis_title=columns[0],
                 yaxis_title=columns[1])
-
-            graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            fig1['data'][0]['showlegend']=True
+            fig1['data'][0]['name']=factor
+            
+            subfig.add_traces(fig1.data + fig2.data)
+            subfig.layout.yaxis.title=factor
+            subfig.layout.xaxis.title="Time"
+            subfig.layout.yaxis2.title="Crime Rates"
+            subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
+            subfig.update_layout(legend_x=1, legend_y=1, showlegend=True)
+            #graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+            graph1JSON = json.dumps(subfig, cls=plotly.utils.PlotlyJSONEncoder)
             graphJSON.append(graph1JSON)
 
         
@@ -164,19 +198,32 @@ def upload():
 
     if request.method == 'POST':
         newfactor = request.form.get("newfactor")
-        factors.append(newfactor)
+        if not newfactor in factors:
+            factors.append(newfactor)
+        country = request.form.get("Country")
+
+        
 
         # Get the list of files from webpage
         files = request.files.getlist("file")
-        print(files)
-
+      
         # Iterate for each file in the files List, and Save them
         for file in files:
-            filename = secure_filename(file.filename)
-            newfactor_data[newfactor] = filename
+            
+            temp, ext = os.path.splitext(file.filename)
+            
+            
+            #filename = secure_filename(file.filename)
+            
+            filename = newfactor+"_"+country+ext
+            
+            if newfactor in newfactor_data.keys():
+                newfactor_data[newfactor][country] = filename
+            else:
+                newfactor_data[newfactor] = {country: filename}
             file_path = os.path.join(app.root_path, 'datasets_user', filename)
             file.save(file_path)
-
+        
         while not os.path.exists(file_path):
             time.sleep(1)
 
