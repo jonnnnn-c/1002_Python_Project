@@ -18,6 +18,18 @@
         <form action = "/upload_files" method="POST" enctype="multipart/form-data">
             <label for="newfactor">Factor to add:&nbsp;&nbsp;</label>
             <input type="text" id="newfactor" name="newfactor" required>
+            <select name="Country" id="Country" class="form-control">
+                <option value="United States">USA</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Japan">Japan</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Jamaica">Jamaica</option>
+                <option value="France">France</option>
+                <option value="Philippines">Philippines</option>
+                <option value="India">India</option>
+                <option value="South Africa">South Africa</option>
+                <option value="Mexico">Mexico</option>
+            </select>
             <br><br>
             <input type="file" name="file"/>
             <input type = "submit" value="Upload">
