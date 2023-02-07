@@ -54,12 +54,19 @@
 
                 {% if filter == True %}
                     <h1 style="padding-top: 2em; text-align: center;">{{ country }}</h1>
+                    {% set count = 0 %}
                     {% for graphs in range(graphJSON|length) %}
                         <div id='{{ graphs }}' class='chart'></div>
                         <script type='text/javascript'>
                             var graph = {{ graphJSON[graphs] | safe}};
                             Plotly.plot('{{ graphs }}', graph, {});
                         </script>
+                        <a class="btn btn-info"
+                           style="margin-left: 80px;"
+                           href="{{ url_for('view_individual_dataset', dataset=factors_list[graphs]) }}"
+                           role="button">View dataset - {{factors_list[graphs]}}
+                        </a>
+                        {% set count = count + 1 %}
                     {% endfor %}
                 {% endif %}
             </div>

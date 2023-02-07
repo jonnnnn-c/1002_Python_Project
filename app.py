@@ -23,6 +23,7 @@ import humanize
 import plotly
 import plotly.express as px
 from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 from flask import *
 from werkzeug.utils import secure_filename
 
@@ -37,11 +38,11 @@ factors = ['Consumer_Price_Index', 'Income_Polarization', 'Enrolment', 'Family',
 newfactor_data = {}
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    global factors, newfactor_data
+    global factors, newfactor_data, Country, start_year, end_year
     # Filter values
-
+    factors_list = list()
     # country
     Country = request.args.get('Country')
 
@@ -85,11 +86,12 @@ def index():
     # Factors
     factors_value = {}
     for factor in factors:
-        if request.args.get(factor) != None:
+        if request.args.get(factor) is not None:
             factors_value[factor] = True
 
     # check if dict is empty -> no factors
     if bool(factors_value):
+        # Show crimes rates graph
         clean_data = cleanCrimedata(
             "data/CrimeRates/" + Country.replace(" ", "-").lower() + "-crime-rate-statistics.csv", start_year, end_year)
         print(clean_data)
@@ -114,17 +116,17 @@ def index():
 
         graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
         graphJSON.append(graph1JSON)
+
+        # Show graphs for different factors
         for factor in factors_value:
             print(factor)
             subfig = make_subplots(specs=[[{"secondary_y": True}]])
             if factor == 'Consumer_Price_Index':
-                clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year,
-                                          end_year)
+                clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year, end_year)
                 title = "Consumer Price Index"
                 print(clean_data)
             elif factor == 'Income_Polarization':
-                clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year,
-                                             end_year)
+                clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year, end_year)
                 title = "Income Polarization"
                 print(clean_data)
             elif factor == 'Enrolment':
@@ -168,14 +170,20 @@ def index():
             subfig.layout.yaxis2.title = "Crime Rates"
             subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
             subfig.update_layout(legend_x=1, legend_y=1, showlegend=True)
-            # graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
             graph1JSON = json.dumps(subfig, cls=plotly.utils.PlotlyJSONEncoder)
             graphJSON.append(graph1JSON)
+
+            factors_list = list()
+            factors_list.append('Crime_Rates')
+            for key, value in factors_value.items():
+                factors_list.append(key)
+
+
 
 
     else:
         is_filter = False
-        # Crime Rate Graph            
+        # Crime Rate Graph
         # clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
         # print(clean_data)
 
@@ -190,11 +198,41 @@ def index():
         #    yaxis_title=columns[1])
 
         # graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        # graphJSON.append(graph1JSON) 
+        # graphJSON.append(graph1JSON)
 
     # List of graphs
-    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors, country=Country)
+    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors, factors_list=factors_list, country=Country)
 
+
+@app.route('/view_individual_dataset/<dataset>', methods=['GET'])
+def view_individual_dataset(dataset):
+    print(dataset, Country, start_year, end_year)
+
+    # Get dataset from url, the rest is from global variables
+    if dataset == "Crime_Rates":
+        clean_data = cleanCrimedata(
+            "data/CrimeRates/" + Country.replace(" ", "-").lower() + "-crime-rate-statistics.csv", start_year, end_year)
+    elif dataset == 'Consumer_Price_Index':
+        clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year, end_year)
+    elif dataset == 'Income_Polarization':
+        clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year, end_year)
+    elif dataset == 'Enrolment':
+        clean_data = cleanEnroldata("data/enrollment.csv", Country, start_year, end_year)
+    elif dataset == 'Family':
+        clean_data = cleanFamilyData("data/family.csv", Country, start_year, end_year)
+    elif dataset == 'Poverty':
+        clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
+
+    columns = [col for col in clean_data.columns]
+    column_1_values = [col for col in clean_data[columns[0]]]
+    column_2_values = [col for col in clean_data[columns[1]]]
+
+    # Display dataset in tables
+    fig = go.Figure(data=[go.Table(header=dict(values=[columns[0], columns[1]]),
+                                   cells=dict(values=[column_1_values, column_2_values]))])
+    # Show table in another page
+    fig.show()
+    return redirect(url_for("index"))
 
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload():
