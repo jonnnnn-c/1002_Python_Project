@@ -37,7 +37,7 @@ app.secret_key = "super secret key"
 factors = ['Consumer_Price_Index', 'Income_Polarization', 'Enrolment', 'Family', 'Poverty']
 newfactor_data = {}
 
-
+# main page - dashboard
 @app.route('/', methods=['GET'])
 def index():
     global factors, newfactor_data, Country, start_year, end_year
@@ -203,7 +203,7 @@ def index():
     # List of graphs
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors, factors_list=factors_list, country=Country)
 
-
+# view individual dataset
 @app.route('/view_individual_dataset/<dataset>', methods=['GET'])
 def view_individual_dataset(dataset):
     print(dataset, Country, start_year, end_year)
@@ -243,14 +243,18 @@ def view_individual_dataset(dataset):
     fig.show()
     return redirect(url_for("index"))
 
+# allow users to upload their data files
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload():
     global file_path, newfactor_data
 
     if request.method == 'POST':
+        # get new factor to add
         newfactor = request.form.get("newfactor")
         if not newfactor in factors:
             factors.append(newfactor)
+
+        # get country to add to
         country = request.form.get("Country")
 
         # Get the list of files from webpage
@@ -287,12 +291,14 @@ def upload():
     return render_template('upload_files.html', files=files)
 
 
+# allow users to delete their data file
 @app.route('/delete_file/<filename>', methods=['GET', 'POST'])
 def delete_file(filename):
     os.remove(os.path.join(app.root_path, 'datasets_user', filename))
     return redirect(url_for("upload"))
 
 
+# allow users to display the files they upload
 @app.route('/display_file/<filename>', methods=['GET'])
 def display(filename):
     # if file size too big, may take a long time or crash
@@ -322,5 +328,6 @@ def display(filename):
     return render_template('display.html', data_var=df_html, filename=filename)
 
 
+# run the app
 if __name__ == '__main__':
     app.run()
