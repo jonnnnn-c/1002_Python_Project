@@ -222,6 +222,15 @@ def view_individual_dataset(dataset):
         clean_data = cleanFamilyData("data/family.csv", Country, start_year, end_year)
     elif dataset == 'Poverty':
         clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
+    elif dataset in factors:
+        filename = newfactor_data[dataset][Country]
+        
+        file_name, file_extension = os.path.splitext(filename)
+        file_path = os.path.join(app.root_path, 'datasets_user', filename)
+        if file_extension in [".csv",".txt"]:
+            clean_data = cleanCSVTXTdata(file_path,Country,start_year,end_year)
+        elif file_extension == ".json":
+            clean_data = cleanJsondata(file_path,Country,start_year,end_year)
 
     columns = [col for col in clean_data.columns]
     column_1_values = [col for col in clean_data[columns[0]]]
