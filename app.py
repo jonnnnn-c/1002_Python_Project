@@ -349,18 +349,23 @@ def upload():
 @app.route('/delete_file/<filename>', methods=['GET', 'POST'])
 def delete_file(filename):
     global newfactor_data
-    os.remove(os.path.join(app.root_path, 'datasets_user', filename))
-    file_name, file_extension = os.path.splitext(filename)
-    file_name = file_name.split("_")
-    factor = file_name[0]
-    country = file_name[1]
-    del newfactor_data[factor][country]
 
-    if newfactor_data[factor] == {}:
-        del newfactor_data[factor]
-        factors.remove(factor)
-    return redirect(url_for("upload"))
+    try:
+        os.remove(os.path.join(app.root_path, 'datasets_user', filename))
+        file_name, file_extension = os.path.splitext(filename)
+        file_name = file_name.split("_")
+        factor = file_name[0]
+        country = file_name[1]
+        del newfactor_data[factor][country]
 
+        if newfactor_data[factor] == {}:
+            del newfactor_data[factor]
+            factors.remove(factor)
+        return redirect(url_for("upload"))
+
+    except:
+        print('No factor')
+        return redirect(url_for("upload"))
 
 
 # allow users to display the files they upload
