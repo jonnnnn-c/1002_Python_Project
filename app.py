@@ -142,15 +142,19 @@ def index():
                 title = "Poverty"
                 print(clean_data)
             else:
-                filename = newfactor_data[factor][Country]
-                file_path = os.path.join(app.root_path, 'datasets_user', filename)
-                file_name, file_extension = os.path.splitext(filename)
-                if file_extension == '.csv' or file_extension == '.txt':
-                    clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
-                elif file_extension == '.json':
-                    clean_data = cleanJsondata(file_path, Country, start_year, end_year)
                 title = factor
-                print(clean_data)
+                if Country in newfactor_data[factor]:
+                    filename = newfactor_data[factor][Country]
+                    file_path = os.path.join(app.root_path, 'datasets_user', filename)
+                    file_name, file_extension = os.path.splitext(filename)
+                    if file_extension == '.csv' or file_extension == '.txt':
+                        clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
+                    elif file_extension == '.json':
+                        clean_data = cleanJsondata(file_path, Country, start_year, end_year)
+                    
+                    print(clean_data)
+                
+
 
             columns = [col for col in clean_data.columns]
             column_1_values = [col for col in clean_data[columns[0]]]
