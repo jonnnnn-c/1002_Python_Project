@@ -37,6 +37,7 @@ app.secret_key = "super secret key"
 factors = ['Consumer_Price_Index', 'Income_Polarization', 'Enrolment', 'Family', 'Poverty']
 newfactor_data = {}
 
+
 # main page - dashboard
 @app.route('/', methods=['GET'])
 def index():
@@ -122,11 +123,13 @@ def index():
             print(factor)
             subfig = make_subplots(specs=[[{"secondary_y": True}]])
             if factor == 'Consumer_Price_Index':
-                clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year, end_year)
+                clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year,
+                                          end_year)
                 title = "Consumer Price Index"
                 print(clean_data)
             elif factor == 'Income_Polarization':
-                clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year, end_year)
+                clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year,
+                                             end_year)
                 title = "Income Polarization"
                 print(clean_data)
             elif factor == 'Enrolment':
@@ -201,7 +204,9 @@ def index():
         # graphJSON.append(graph1JSON)
 
     # List of graphs
-    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors, factors_list=factors_list, country=Country)
+    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
+                           factors_list=factors_list, country=Country)
+
 
 # view individual dataset
 @app.route('/view_individual_dataset/<dataset>', methods=['GET'])
@@ -215,7 +220,8 @@ def view_individual_dataset(dataset):
     elif dataset == 'Consumer_Price_Index':
         clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year, end_year)
     elif dataset == 'Income_Polarization':
-        clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year, end_year)
+        clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year,
+                                     end_year)
     elif dataset == 'Enrolment':
         clean_data = cleanEnroldata("data/enrollment.csv", Country, start_year, end_year)
     elif dataset == 'Family':
@@ -224,13 +230,13 @@ def view_individual_dataset(dataset):
         clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
     elif dataset in factors:
         filename = newfactor_data[dataset][Country]
-        
+
         file_name, file_extension = os.path.splitext(filename)
         file_path = os.path.join(app.root_path, 'datasets_user', filename)
-        if file_extension in [".csv",".txt"]:
-            clean_data = cleanCSVTXTdata(file_path,Country,start_year,end_year)
+        if file_extension in [".csv", ".txt"]:
+            clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
         elif file_extension == ".json":
-            clean_data = cleanJsondata(file_path,Country,start_year,end_year)
+            clean_data = cleanJsondata(file_path, Country, start_year, end_year)
 
     columns = [col for col in clean_data.columns]
     column_1_values = [col for col in clean_data[columns[0]]]
@@ -242,6 +248,12 @@ def view_individual_dataset(dataset):
     # Show table in another page
     fig.show()
     return redirect(url_for("index"))
+
+
+@app.route('/export_dataset/<dataset>', methods=['GET'])
+def export_dataset(dataset):
+    return redirect(url_for("index"))
+
 
 # allow users to upload their data files
 @app.route('/upload_files', methods=['GET', 'POST'])
