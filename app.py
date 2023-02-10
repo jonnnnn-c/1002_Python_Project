@@ -291,12 +291,6 @@ def view_individual_dataset(dataset):
                            factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
 
 
-# allow users to export specific dataset
-@app.route('/export_dataset/<dataset>', methods=['GET'])
-def export_dataset(dataset):
-    return redirect(url_for("index"))
-
-
 # allow users to upload their data files
 @app.route('/upload_files', methods=['GET', 'POST'])
 def upload():
@@ -362,6 +356,7 @@ def delete_file(filename):
     return redirect(url_for("upload"))
 
 
+
 # allow users to display the files they upload
 @app.route('/display_file/<filename>', methods=['GET'])
 def display(filename):
@@ -391,6 +386,7 @@ def display(filename):
         df_html = "<h5>Error in displaying File contents</h5>"
     return render_template('display.html', data_var=df_html, filename=filename)
        
+# allow users to export specific dataset
 @app.route('/export_dataset/<file_type>/<dataset>', methods=['GET'])
 def export_dataset(dataset,file_type):
      # Get dataset from url, the rest is from global variables
