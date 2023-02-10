@@ -390,7 +390,42 @@ def display(filename):
         print(e)
         df_html = "<h5>Error in displaying File contents</h5>"
     return render_template('display.html', data_var=df_html, filename=filename)
+       
+@app.route('/export_dataset/<file_type>/<dataset>', methods=['GET'])
+def export_dataset(dataset,file_type):
+     # Get dataset from url, the rest is from global variables
+    if dataset == "Crime_Rates":
+        clean_data = cleanCrimedata(
+            "data/CrimeRates/" + Country.replace(" ", "-").lower() + "-crime-rate-statistics.csv", start_year, end_year)
+    elif dataset == 'Consumer_Price_Index':
+        clean_data = cleanCPIdata("data/CosumerPriceIndex/CPI_" + convertname(Country) + ".xlsx", start_year, end_year)
+    elif dataset == 'Income_Polarization':
+        clean_data = cleanIncomedata("data/IncomePolarization/IncomeInequality_World.xls", Country, start_year, end_year)
+    elif dataset == 'Enrolment':
+        clean_data = cleanEnroldata("data/enrollment.csv", Country, start_year, end_year)
+    elif dataset == 'Family':
+        clean_data = cleanFamilyData("data/family.csv", Country, start_year, end_year)
+    elif dataset == 'Poverty':
+        clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
+    elif dataset in factors:
+        filename = newfactor_data[dataset][Country]
+        
+        file_name, file_extension = os.path.splitext(filename)
+        file_path = os.path.join(app.root_path, 'datasets_user', filename)
+        if file_extension in [".csv",".txt"]:
+            clean_data = cleanCSVTXTdata(file_path,Country,start_year,end_year)
+        elif file_extension == ".json":
+            clean_data = cleanJsondata(file_path,Country,start_year,end_year)
+    filename = dataset+"_"+Country+"."+file_type
+    filename = os.path.join(app.root_path, 'Exports', filename)
 
+    if file_type == "csv":
+        clean_data.to_csv(filename, index=False, header=True)
+    
+    elif file_type == "xlsx":
+        clean_data.to_excel(filename, index=False)
+
+    return send_file(filename)
 
 # run the app
 if __name__ == '__main__':
