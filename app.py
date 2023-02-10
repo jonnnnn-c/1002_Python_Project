@@ -206,8 +206,6 @@ def index():
 # view individual dataset
 @app.route('/view_individual_dataset/<dataset>', methods=['GET'])
 def view_individual_dataset(dataset):
-    print(dataset, Country, start_year, end_year)
-
     # Get dataset from url, the rest is from global variables
     if dataset == "Crime_Rates":
         clean_data = cleanCrimedata(
@@ -224,16 +222,22 @@ def view_individual_dataset(dataset):
     elif dataset == 'Poverty':
         clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
     elif dataset in factors:
-        
-        filename = newfactor_data[dataset][Country]
 
-        file_name, file_extension = os.path.splitext(filename)
-        file_path = os.path.join(app.root_path, 'datasets_user', filename)
-        if file_extension in [".csv", ".txt"]:
-            clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
-        elif file_extension == ".json":
-            clean_data = cleanJsondata(file_path, Country, start_year, end_year)
-    
+        try:
+            filename = newfactor_data[dataset][Country]
+
+            file_name, file_extension = os.path.splitext(filename)
+            file_path = os.path.join(app.root_path, 'datasets_user', filename)
+            if file_extension in [".csv", ".txt"]:
+                clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
+            elif file_extension == ".json":
+                clean_data = cleanJsondata(file_path, Country, start_year, end_year)
+        except:
+            flash("Dataset not found")
+            return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
+                                   factors_list=factors_list, country=Country, countries=countries,
+                                   start_year=start_year, end_year=end_year, factors_value=factors_value)
+
     if clean_data.empty:
         flash("Dataset not found")
         return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
