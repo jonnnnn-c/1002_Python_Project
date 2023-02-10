@@ -261,7 +261,7 @@ def view_individual_dataset(dataset):
     fig.show()
     return redirect(url_for("index"))
 
-
+# allow users to export specific dataset
 @app.route('/export_dataset/<dataset>', methods=['GET'])
 def export_dataset(dataset):
     return redirect(url_for("index"))
