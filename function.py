@@ -91,7 +91,9 @@ def cleanIncomedata(filename,country,startyear,endyear):
     if country == "United States":
         country = "USA"
     country = " "+country
-    
+
+    if not country in countrylist:
+        return None
 
     for i in range(len(countrylist)):
         if countrylist[i] == country:
@@ -129,6 +131,9 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     print(Country)
     
     datasetstartyear,datasetendyear = 0,0
+
+    if not Country in countrylist:
+        return None
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
@@ -174,6 +179,9 @@ def cleanPovertydata(filename, Country, startyear, endyear):
 
     datasetstartyear,datasetendyear = 0,0
 
+    if not Country in countrylist:
+        return None
+
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
             datasetstartyear = int(df["survey_year"][i] // 1)
@@ -218,6 +226,9 @@ def cleanFamilyData(filename, Country, startyear, endyear):
     check = False
 
     datasetstartyear,datasetendyear = 0,0
+
+    if not Country in countrylist:
+        return None
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
