@@ -27,7 +27,7 @@ def cleanCrimedata(filename,startyear,endyear):
     for year in range(startyear,endyear+1):
         for row in range(len(df["date"])):
             if int(df["date"][startrow+row][:4]) == year:
-                newdata.append(float(df[" Per 100K Population"][startrow+row]))
+                newdata.append(round(float(df[" Per 100K Population"][startrow+row]),4))
                 yearlist.append(int(year))
             if int(df["date"][startrow+row][:4]) >= year:
                 break
@@ -66,7 +66,7 @@ def cleanCPIdata(filename,startyear,endyear):
     
     # Append data into list
     for year in range(endyear-startyear+1):
-        newdata.append(float(df.loc[4][startcol+year*12]))
+        newdata.append(round(float(df.loc[4][startcol+year*12]),2))
         yearlist.append(int(startyear+year))
     dict1 = {"Year":yearlist, 'Consumer Price Index':newdata}
     newdf = pd.DataFrame (dict1) 
@@ -93,7 +93,7 @@ def cleanIncomedata(filename,country,startyear,endyear):
     country = " "+country
 
     if not country in countrylist:
-        return None
+        return pd.DataFrame({})
 
     for i in range(len(countrylist)):
         if countrylist[i] == country:
@@ -101,7 +101,7 @@ def cleanIncomedata(filename,country,startyear,endyear):
             break
     
     for year in range(endyear-startyear+1):
-        newdata.append(float(df.loc[rownum+1][startyear-1990+34+year])-float(df.loc[rownum][startyear-1990+2+year]))
+        newdata.append(round(float(df.loc[rownum+1][startyear-1990+34+year])-float(df.loc[rownum][startyear-1990+2+year]),4))
 
     #Top percentile - bottom 50 percentile for each year to create a new list of data
     #Length of list depend on how many years to show
@@ -133,7 +133,7 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     datasetstartyear,datasetendyear = 0,0
 
     if not Country in countrylist:
-        return None
+        return pd.DataFrame({})
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
@@ -151,7 +151,7 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     for year in range(startyear,endyear+1):
         for row in range(len(countrylist)):
             if df.loc[rownum+row][2] == year:
-                newdata.append(float(df.loc[rownum+row][3]))
+                newdata.append(round(float(df.loc[rownum+row][3]),4))
                 yearlist.append(int(year))
                 break
     
@@ -180,7 +180,7 @@ def cleanPovertydata(filename, Country, startyear, endyear):
     datasetstartyear,datasetendyear = 0,0
 
     if not Country in countrylist:
-        return None
+        return pd.DataFrame({})
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
@@ -198,7 +198,7 @@ def cleanPovertydata(filename, Country, startyear, endyear):
         for row in range(endrow-rownum):
             if int(df["survey_year"][rownum+row]//1) == year:
                 
-                newdata.append(float(df["gini"][rownum+row]))
+                newdata.append(round(float(df["gini"][rownum+row]),4))
                 yearlist.append(int(year))
                 
 
@@ -228,7 +228,7 @@ def cleanFamilyData(filename, Country, startyear, endyear):
     datasetstartyear,datasetendyear = 0,0
 
     if not Country in countrylist:
-        return None
+        return pd.DataFrame({})
 
     for i in range(len(countrylist)):
         if countrylist[i] == Country and check == False:
@@ -244,7 +244,7 @@ def cleanFamilyData(filename, Country, startyear, endyear):
     for year in range(startyear,endyear+1):
         for row in range(endrow-rownum):
             if df["Year"][rownum + row] == year:
-                newdata.append(float(df["Share of single parent families"][rownum+row]))
+                newdata.append(round(float(df["Share of single parent families"][rownum+row]),4))
                 yearlist.append(int(year))
                 break
 
