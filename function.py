@@ -261,8 +261,9 @@ def cleanJsondata(filename,Country, startyear,endyear):
             file7 = "datasets_user/test.json"
             print(cleanJsondata(file7,"Brazil",1995,1999))
     """
-    df = (pd.read_json(filename))
-    newdf = df["CountryList"][Country]
+    df = dict(pd.read_json(filename, orient='index'))[0]
+
+    newdf = dict(df[Country])
     datasetstartyear,datasetendyear = int(list(newdf.keys())[0]),int(list(newdf.keys())[-1])
     newdata = []
     yearlist = []
