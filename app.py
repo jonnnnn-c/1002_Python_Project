@@ -310,11 +310,7 @@ def upload():
 
         # Iterate for each file in the files List, and Save them
         for file in files:
-
             temp, ext = os.path.splitext(file.filename)
-
-            # filename = secure_filename(file.filename)
-
             filename = newfactor + "_" + country + ext
 
             if newfactor in newfactor_data.keys():
