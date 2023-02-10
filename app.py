@@ -24,8 +24,9 @@ import plotly
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+from plotly.colors import n_colors
 from flask import *
-from werkzeug.utils import secure_filename
+import numpy as np
 
 from function import *
 
@@ -233,12 +234,59 @@ def view_individual_dataset(dataset):
     column_1_values = [col for col in clean_data[columns[0]]]
     column_2_values = [col for col in clean_data[columns[1]]]
 
-    # Display dataset in tables
-    fig = go.Figure(data=[go.Table(header=dict(values=[columns[0], columns[1]]),
-                                   cells=dict(values=[column_1_values, column_2_values]))])
+    # Used plotly graphs, and color (Simple table heatmap)
+    # Plotly colors each row based on incremental value (i.e. start from 0 to end value)
+    # https://plotly.com/python/table/
+    # However, our dataset doesn't start from 0,
+    # so I needed to create an order the numbers based on how big the values are (i.e. 0 = smallest, 27 = biggest)
+    # After that rearrange them back to the original list so that plotly knows which number is the biggest in the
+    # dataset and which is the smallest.
 
-    # Show table in another page
+    # Example:
+    # values = [200, 100, 500, 300, 400]
+    # reposition = [100, 200, 300, 400, 500]
+    # assign index = [0, 1, 2, 3, 4]
+    # assign index to values = [1, 0, 4, 3, 2]
+
+    column_1_rgb_value = list()
+    for i in range(len(column_1_values)):
+        column_1_rgb_value.append(i)
+
+    # Rearranging the values and giving each an index number according to size of value
+    column_2_rgb_value_dict = dict()
+    count = 0
+    for i in sorted(column_2_values):
+        column_2_rgb_value_dict[count] = i
+        count += 1
+
+    # Append the index numbers based on where the original values were
+    column_2_rgb_value = []
+    for i in column_2_values:
+        for key, value in column_2_rgb_value_dict.items():
+            if value == i:
+                column_2_rgb_value.append(key)
+
+    # Color values, len(column_1_values) tells where the highlight color should be (i.e. red)
+    colors = n_colors('rgb(255,255,255)', 'rgb(255, 0, 0)', len(column_1_values), colortype='rgb')
+    a = np.asarray(column_1_rgb_value)
+    b = np.asarray(column_2_rgb_value)
+
+    fig = go.Figure(data=[go.Table(
+        header=dict(
+            values=[f'<b>{columns[0]}<b>', f'<b>{columns[1]}<b>'],
+            line_color='white', fill_color='white',
+            align='center', font=dict(color='black', size=18)
+        ),
+        cells=dict(
+            values=[column_1_values, column_2_values],
+            line_color=[np.array(colors)[a], np.array(colors)[b]],
+            fill_color=[np.array(colors)[a], np.array(colors)[b]],
+            align='center', font=dict(color='black', size=15)
+        ))
+    ])
+
     fig.show()
+
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
                            factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
 
