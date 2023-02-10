@@ -32,7 +32,15 @@
                         <h4 style="padding-bottom: 8px;">Country:</h4><br>
 
                         <select name="Country" id="Country" class="form-control">
-                            <option value="United States">USA</option>
+                            {% for option in countries %}
+                                {% if option == country %}
+                                    <option value="{{ option }}" selected>{{ option }}</option>
+                                {% else %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endif %}
+                            {% endfor %}
+
+                            <!-- <option value="United States">USA</option>
                             <option value="Singapore">Singapore</option>
                             <option value="Japan">Japan</option>
                             <option value="Brazil">Brazil</option>
@@ -41,7 +49,7 @@
                             <option value="Philippines">Philippines</option>
                             <option value="India">India</option>
                             <option value="South Africa">South Africa</option>
-                            <option value="Mexico">Mexico</option>
+                            <option value="Mexico">Mexico</option> -->
                         </select>
                     </div>
                 </div>

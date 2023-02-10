@@ -195,7 +195,7 @@ def index():
 
     # List of graphs
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
-                           factors_list=factors_list, country=Country)
+                           factors_list=factors_list, country=Country, countries=countries)
 
 
 # view individual dataset
