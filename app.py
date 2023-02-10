@@ -163,7 +163,7 @@ def index():
                 else:
                     dict1 = {"Year": [], "No Data": []}
                     clean_data = pd.DataFrame(dict1)
-            if clean_data == None:
+            if clean_data.empty:
                 dict1 = {"Year": [], "No Data": []}
                 clean_data = pd.DataFrame(dict1)
 
@@ -234,7 +234,7 @@ def view_individual_dataset(dataset):
         elif file_extension == ".json":
             clean_data = cleanJsondata(file_path, Country, start_year, end_year)
     
-    if clean_data == None:
+    if clean_data.empty:
         flash("Dataset not found")
         return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
                            factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
