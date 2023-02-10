@@ -92,7 +92,7 @@ def cleanIncomedata(filename,country,startyear,endyear):
         country = "USA"
     country = " "+country
 
-    if not country in countrylist:
+    if not country in list(countrylist):
         return pd.DataFrame({})
 
     for i in range(len(countrylist)):
@@ -132,7 +132,7 @@ def cleanEnroldata(filename, Country, startyear, endyear):
     
     datasetstartyear,datasetendyear = 0,0
 
-    if not Country in countrylist:
+    if not Country in list(countrylist):
         return pd.DataFrame({})
 
     for i in range(len(countrylist)):
@@ -179,7 +179,7 @@ def cleanPovertydata(filename, Country, startyear, endyear):
 
     datasetstartyear,datasetendyear = 0,0
 
-    if not Country in countrylist:
+    if not Country in list(countrylist):
         return pd.DataFrame({})
 
     for i in range(len(countrylist)):
@@ -227,7 +227,7 @@ def cleanFamilyData(filename, Country, startyear, endyear):
 
     datasetstartyear,datasetendyear = 0,0
 
-    if not Country in countrylist:
+    if not Country in list(countrylist):
         return pd.DataFrame({})
 
     for i in range(len(countrylist)):
