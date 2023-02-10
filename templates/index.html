@@ -65,6 +65,18 @@
                 <!-- Plotly -->
                 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div style="margin-top: 40px;">
+                            <div class="alert alert-danger" role="alert">
+                                {{message}}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
                 {% if filter == True %}
                     <h1 style="padding-top: 2em; text-align: center;">{{ country }}</h1>
                     {% set count = 0 %}
