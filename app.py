@@ -163,6 +163,9 @@ def index():
                 else:
                     dict1 = {"Year": [], "No Data": []}
                     clean_data = pd.DataFrame(dict1)
+            if clean_data == None:
+                dict1 = {"Year": [], "No Data": []}
+                clean_data = pd.DataFrame(dict1)
 
             columns = [col for col in clean_data.columns]
             column_1_values = [col for col in clean_data[columns[0]]]
@@ -221,6 +224,7 @@ def view_individual_dataset(dataset):
     elif dataset == 'Poverty':
         clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
     elif dataset in factors:
+        
         filename = newfactor_data[dataset][Country]
 
         file_name, file_extension = os.path.splitext(filename)
@@ -229,6 +233,11 @@ def view_individual_dataset(dataset):
             clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
         elif file_extension == ".json":
             clean_data = cleanJsondata(file_path, Country, start_year, end_year)
+    
+    if clean_data == None:
+        flash("Dataset not found")
+        return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
 
     columns = [col for col in clean_data.columns]
     column_1_values = [col for col in clean_data[columns[0]]]
