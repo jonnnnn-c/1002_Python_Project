@@ -41,7 +41,7 @@ newfactor_data = {}
 # main page - dashboard
 @app.route('/', methods=['GET'])
 def index():
-    global factors, newfactor_data, Country, start_year, end_year
+    global factors, newfactor_data, Country, start_year, end_year, graphJSON, is_filter, factors_list
     # Filter values
     factors_list = list()
     # country
@@ -102,12 +102,12 @@ def index():
         column_2_values = [col for col in clean_data[columns[1]]]
 
         df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-        
+
         fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
             xaxis_title=columns[0],
             yaxis_title=columns[1])
-        
-        fig2 = px.histogram(df,"x","y", opacity=0.4)
+
+        fig2 = px.histogram(df, "x", "y", opacity=0.4)
         fig2.update_traces(marker_color="green", showlegend=True, name="Crime Rates")
 
         '''fig2 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
@@ -157,14 +157,11 @@ def index():
                         clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
                     elif file_extension == '.json':
                         clean_data = cleanJsondata(file_path, Country, start_year, end_year)
-                    
+
                     print(clean_data)
                 else:
-                    dict1 = {"Year": [], "No Data" :[]}
-                    clean_data= pd.DataFrame (dict1) 
-                    
-                
-
+                    dict1 = {"Year": [], "No Data": []}
+                    clean_data = pd.DataFrame(dict1)
 
             columns = [col for col in clean_data.columns]
             column_1_values = [col for col in clean_data[columns[0]]]
@@ -182,7 +179,7 @@ def index():
             subfig.layout.yaxis.title = factor.replace('_', ' ')
             subfig.layout.xaxis.title = "Time"
             subfig.layout.yaxis2.title = "Crime Rates"
-            #subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
+            # subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
             subfig.update_layout(legend_x=1, legend_y=1, showlegend=True)
             subfig.layout.update({'title': factor})
             graph1JSON = json.dumps(subfig, cls=plotly.utils.PlotlyJSONEncoder)
@@ -193,27 +190,8 @@ def index():
             for key, value in factors_value.items():
                 factors_list.append(key)
 
-
-
-
     else:
         is_filter = False
-        # Crime Rate Graph
-        # clean_data = cleanCrimedata("data/CrimeRates/"+Country.replace(" ","-").lower()+"-crime-rate-statistics.csv", start_year, end_year)
-        # print(clean_data)
-
-        # columns = [col for col in clean_data.columns]
-        # column_1_values = [col for col in clean_data[columns[0]]]
-        # column_2_values = [col for col in clean_data[columns[1]]]
-
-        # df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
-        # fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
-        #    xaxis_title=columns[0],
-        #    yaxis_title=columns[1])
-
-        # graph1JSON = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
-        # graphJSON.append(graph1JSON)
 
     # List of graphs
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
@@ -257,9 +235,12 @@ def view_individual_dataset(dataset):
     # Display dataset in tables
     fig = go.Figure(data=[go.Table(header=dict(values=[columns[0], columns[1]]),
                                    cells=dict(values=[column_1_values, column_2_values]))])
+
     # Show table in another page
     fig.show()
-    return redirect(url_for("index"))
+    return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
+                           factors_list=factors_list, country=Country)
+
 
 # allow users to export specific dataset
 @app.route('/export_dataset/<dataset>', methods=['GET'])
