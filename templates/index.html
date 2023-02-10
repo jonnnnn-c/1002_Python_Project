@@ -10,8 +10,13 @@
                         <h4>Factor Filter:</h4><br>
 
                         {% for factor in factors %}
-                            <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T">
-                            <label for="{{ factor }}" style="padding-left: 10px;">{{ factor }}</label><br>
+                            {% if factors_value[factor] == True %}
+                                <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T" checked>
+                                <label for="{{ factor }}" style="padding-left: 10px;">{{ factor }}</label><br>
+                            {% else %}
+                                <input type="checkbox" id="{{ factor }}" name="{{ factor }}" value="T">
+                                <label for="{{ factor }}" style="padding-left: 10px;">{{ factor }}</label><br>
+                            {% endif %}
                         {% endfor %}
                     </div>
 

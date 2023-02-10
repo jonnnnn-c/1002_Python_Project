@@ -41,7 +41,7 @@ newfactor_data = {}
 # main page - dashboard
 @app.route('/', methods=['GET'])
 def index():
-    global factors, newfactor_data, Country, start_year, end_year, graphJSON, is_filter, factors_list, countries
+    global factors, newfactor_data, Country, start_year, end_year, graphJSON, is_filter, factors_list, countries, factors_value
     # Filter values
     factors_list = list()
     # country
@@ -194,8 +194,9 @@ def index():
         is_filter = False
 
     # List of graphs
+    print("A", factors_value, factors)
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
-                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year)
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
 
 
 # view individual dataset
@@ -239,7 +240,7 @@ def view_individual_dataset(dataset):
     # Show table in another page
     fig.show()
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
-                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year)
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
 
 
 # allow users to export specific dataset
