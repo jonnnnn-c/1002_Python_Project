@@ -276,7 +276,8 @@ def view_individual_dataset(dataset):
                 column_2_rgb_value.append(key)
 
     # Color values, len(column_1_values) tells where the highlight color should be (i.e. red)
-    colors = n_colors('rgb(255,255,255)', 'rgb(255, 0, 0)', len(column_1_values), colortype='rgb')
+    colors = n_colors('rgb(255, 213, 128)', 'rgb(255, 0, 0)', len(column_1_values), colortype='rgb')
+
     a = np.asarray(column_1_rgb_value)
     b = np.asarray(column_2_rgb_value)
 
