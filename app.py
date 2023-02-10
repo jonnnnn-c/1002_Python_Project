@@ -102,16 +102,19 @@ def index():
         column_2_values = [col for col in clean_data[columns[1]]]
 
         df = pd.DataFrame(dict(x=column_1_values, y=column_2_values))
-
+        
         fig1 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
             xaxis_title=columns[0],
             yaxis_title=columns[1])
+        
+        fig2 = px.histogram(df,"x","y", opacity=0.4)
+        fig2.update_traces(marker_color="green", showlegend=True, name="Crime Rates")
 
-        fig2 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
+        '''fig2 = px.line(df, x='x', y='y', title="Crime Rates").update_layout(
             xaxis_title=columns[0],
             yaxis_title=columns[1])
         fig2['data'][0]['showlegend'] = True
-        fig2['data'][0]['name'] = 'Crime Rates'
+        fig2['data'][0]['name'] = 'Crime Rates'''
 
         fig2.update_traces(yaxis="y2")
 
@@ -145,15 +148,23 @@ def index():
                 title = "Poverty"
                 print(clean_data)
             else:
-                filename = newfactor_data[factor][Country]
-                file_path = os.path.join(app.root_path, 'datasets_user', filename)
-                file_name, file_extension = os.path.splitext(filename)
-                if file_extension == '.csv' or file_extension == '.txt':
-                    clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
-                elif file_extension == '.json':
-                    clean_data = cleanJsondata(file_path, Country, start_year, end_year)
                 title = factor
-                print(clean_data)
+                if Country in newfactor_data[factor]:
+                    filename = newfactor_data[factor][Country]
+                    file_path = os.path.join(app.root_path, 'datasets_user', filename)
+                    file_name, file_extension = os.path.splitext(filename)
+                    if file_extension == '.csv' or file_extension == '.txt':
+                        clean_data = cleanCSVTXTdata(file_path, Country, start_year, end_year)
+                    elif file_extension == '.json':
+                        clean_data = cleanJsondata(file_path, Country, start_year, end_year)
+                    
+                    print(clean_data)
+                else:
+                    dict1 = {"Year": [], "No Data" :[]}
+                    clean_data= pd.DataFrame (dict1) 
+                    
+                
+
 
             columns = [col for col in clean_data.columns]
             column_1_values = [col for col in clean_data[columns[0]]]
@@ -167,12 +178,13 @@ def index():
             fig1['data'][0]['showlegend'] = True
             fig1['data'][0]['name'] = factor
 
-            subfig.add_traces(fig1.data + fig2.data)
+            subfig.add_traces(fig2.data + fig1.data)
             subfig.layout.yaxis.title = factor.replace('_', ' ')
             subfig.layout.xaxis.title = "Time"
             subfig.layout.yaxis2.title = "Crime Rates"
-            subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
+            #subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
             subfig.update_layout(legend_x=1, legend_y=1, showlegend=True)
+            subfig.layout.update({'title': factor})
             graph1JSON = json.dumps(subfig, cls=plotly.utils.PlotlyJSONEncoder)
             graphJSON.append(graph1JSON)
 
@@ -306,7 +318,17 @@ def upload():
 # allow users to delete their data file
 @app.route('/delete_file/<filename>', methods=['GET', 'POST'])
 def delete_file(filename):
+    global newfactor_data
     os.remove(os.path.join(app.root_path, 'datasets_user', filename))
+    file_name, file_extension = os.path.splitext(filename)
+    file_name = file_name.split("_")
+    factor = file_name[0]
+    country = file_name[1]
+    del newfactor_data[factor][country]
+
+    if newfactor_data[factor] == {}:
+        del newfactor_data[factor]
+        factors.remove(factor)
     return redirect(url_for("upload"))
 
 
