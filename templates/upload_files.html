@@ -2,39 +2,55 @@
 
 {% block content %}
     <style>
-        section {
-            padding-top: 2%;
-        }
-
         ul {
             list-style-type: none;
             padding: 0px;
         }
     </style>
 
-    <section>
-        <h3>Upload</h3>
+    <section class="container">
+        <h3>Upload dataset</h3>
         <br>
+
         <form action = "/upload_files" method="POST" enctype="multipart/form-data">
-            <label for="newfactor">Factor to add:&nbsp;&nbsp;</label>
-            <input type="text" id="newfactor" name="newfactor" required><br>
-            <label for="country">Country: &nbsp;&nbsp;</label>
-            <select name="Country" id="Country" class="form-control">
-                <option value="United States">USA</option>
-                <option value="Singapore">Singapore</option>
-                <option value="Japan">Japan</option>
-                <option value="Brazil">Brazil</option>
-                <option value="Jamaica">Jamaica</option>
-                <option value="France">France</option>
-                <option value="Philippines">Philippines</option>
-                <option value="India">India</option>
-                <option value="South Africa">South Africa</option>
-                <option value="Mexico">Mexico</option>
-            </select>
-            <br><br>
-            <input type="file" name="file"/>
-            <input type = "submit" value="Upload">
+
+        <div class="row">
+            <div class="col">
+                <label for="formFile" class="form-label">Upload file: </label><br>
+                <input type="file" id="formFile" name="file">
+                <br><br>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col">
+                <label for="newfactor">Factor to add:  &nbsp;&nbsp;</label>
+                <input  class="form-control" type="text" id="newfactor" name="newfactor" required>
+            </div>
+
+            <div class="col">
+                <label for="country">Country: &nbsp;&nbsp;</label>
+                <select name="Country" id="Country" class="form-control">
+                    <option value="United States">USA</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Jamaica">Jamaica</option>
+                    <option value="France">France</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="India">India</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Mexico">Mexico</option>
+                </select>
+            </div>
+        </div>
+
+        <br><br>
+        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Upload">
         </form>
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -46,10 +62,8 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-    </section>
 
-    <section>
-        <br>
+        <br><br><br>
         <h3>Uploaded datasets</h3>
         <br>
         {% for filename, file_information in files.items() %}
