@@ -195,7 +195,7 @@ def index():
 
     # List of graphs
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
-                           factors_list=factors_list, country=Country, countries=countries)
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year)
 
 
 # view individual dataset
@@ -239,7 +239,7 @@ def view_individual_dataset(dataset):
     # Show table in another page
     fig.show()
     return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
-                           factors_list=factors_list, country=Country, countries=countries)
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year)
 
 
 # allow users to export specific dataset
