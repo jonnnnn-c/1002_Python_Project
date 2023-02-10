@@ -400,6 +400,10 @@ def export_dataset(dataset,file_type):
     elif dataset == 'Poverty':
         clean_data = cleanPovertydata("data/poverty-explorer.csv", Country, start_year, end_year)
     elif dataset in factors:
+        if not Country in newfactor_data[dataset]:
+            flash("Dataset not found")
+            return render_template('index.html', graphJSON=graphJSON, filter=is_filter, factors=factors,
+                           factors_list=factors_list, country=Country, countries=countries, start_year=start_year, end_year=end_year, factors_value=factors_value)
         filename = newfactor_data[dataset][Country]
         
         file_name, file_extension = os.path.splitext(filename)
